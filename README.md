@@ -21,7 +21,7 @@
 | 名字 | 状态 | 说明 |
 | --- | --- | --- |
 | [`agent-team`](plugins/agent-team) | placeholder | 多 agent 协作团队，用于长程多轮 Claude Code 协同 |
-| [`skill-simplifier`](plugins/skill-simplifier) | placeholder | 审查并简化已有的 Claude Code skills |
+| [`skill-simplifier`](plugins/skill-simplifier) | v0.1.0 | 审查 SKILL.md / CLAUDE.md 与上游知识源（系统提示词、Tool Description、其他 Skill、其他 CLAUDE.md）的重复并去重 |
 
 ## 目录结构
 
@@ -36,4 +36,8 @@
         └── README.md
 ```
 
-每个 plugin 可选 `commands/`、`agents/`、`skills/`、`.mcp.json`、`LICENSE` 等子目录与文件。完整 schema 见 [官方 plugin 文档](https://code.claude.com/docs/en/plugins)。
+每个 plugin 可选 `commands/`、`agents/`、`skills/`、`.mcp.json` 等子目录与文件。完整 schema 见 [官方 plugin 文档](https://code.claude.com/docs/en/plugins)。
+
+## 许可证
+
+[MIT](LICENSE) —— 根目录 LICENSE 适用于本 marketplace 及所有 plugin（个别 plugin 若要不同许可，会在自身目录下放置覆盖性 LICENSE）。

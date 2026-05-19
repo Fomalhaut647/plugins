@@ -1,8 +1,16 @@
 {
   "name": "skill-simplifier",
-  "description": "[Placeholder] Review and simplify existing Claude Code skills for clarity and reuse",
+  "description": "Audit a SKILL.md (with optional references/) or CLAUDE.md and remove content that duplicates upstream knowledge sources — system prompt, Tool Descriptions, other Skills, other CLAUDE.md files.",
+  "version": "0.1.0",
   "author": {
     "name": "Fomalhaut647",
     "email": "fomalhaut@stu.pku.edu.cn"
-  }
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/skill-simplifier",
+  "repository": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/skill-simplifier",
+  "keywords": [
+    "skill-simplifier",
+    "claude-code"
+  ]
 }

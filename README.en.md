@@ -21,7 +21,7 @@ Then browse via `/plugin > Discover` or install a specific plugin:
 | Name | Status | Description |
 | --- | --- | --- |
 | [`agent-team`](plugins/agent-team) | placeholder | Multi-agent team coordination for long-running collaborative Claude Code sessions |
-| [`skill-simplifier`](plugins/skill-simplifier) | placeholder | Review and simplify existing Claude Code skills for clarity and reuse |
+| [`skill-simplifier`](plugins/skill-simplifier) | v0.1.0 | Audit a SKILL.md or CLAUDE.md for content that duplicates upstream knowledge sources (system prompt, Tool Descriptions, other Skills, other CLAUDE.md files) and remove the duplication |
 
 ## Structure
 
@@ -36,4 +36,8 @@ Then browse via `/plugin > Discover` or install a specific plugin:
         └── README.md
 ```
 
-Each plugin may optionally include `commands/`, `agents/`, `skills/`, `.mcp.json`, and a `LICENSE`. See the [official plugin docs](https://code.claude.com/docs/en/plugins) for the full schema.
+Each plugin may optionally include `commands/`, `agents/`, `skills/`, and `.mcp.json`. See the [official plugin docs](https://code.claude.com/docs/en/plugins) for the full schema.
+
+## License
+
+[MIT](LICENSE) — the root LICENSE applies to this marketplace and every plugin (an individual plugin can override by shipping its own LICENSE inside its directory).
