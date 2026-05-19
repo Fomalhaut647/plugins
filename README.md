@@ -20,7 +20,7 @@
 
 | 名字 | 状态 | 说明 |
 | --- | --- | --- |
-| [`agent-team`](plugins/agent-team) | placeholder | 多 agent 协作团队，用于长程多轮 Claude Code 协同 |
+| [`agent-team`](plugins/agent-team) | v0.1.0 | 提供 `lead` / `teammate` 两个 subskill 协调长程多 agent 团队；可选 reference docs 叠加 `superpowers` + `code-review` 开发工作流 |
 | [`skill-simplifier`](plugins/skill-simplifier) | v0.1.0 | 审查 SKILL.md / CLAUDE.md 与上游知识源（系统提示词、Tool Description、其他 Skill、其他 CLAUDE.md）的重复并去重 |
 
 ## 目录结构

@@ -9,12 +9,12 @@
   "plugins": [
     {
       "name": "agent-team",
-      "description": "[Placeholder] Multi-agent team coordination for long-running collaborative Claude Code sessions",
+      "description": "Two subskills for Claude Code agent team coordination — agent-team:lead orchestrates a team, agent-team:teammate guides each worker. Covers inbox sync protocol, no-nested-teams constraint, spawn templates, and the shutdown sequence. Optional reference docs layer the superpowers + code-review development workflow on top.",
       "author": {
         "name": "Fomalhaut647",
         "email": "fomalhaut@stu.pku.edu.cn"
       },
-      "category": "development",
+      "category": "productivity",
       "source": "./plugins/agent-team"
     },
     {
