@@ -1,0 +1,5 @@
+.DS_Store
+.claude/
+
+# Reference clone — kept locally for browsing, not part of this marketplace
+claude-plugins-official/

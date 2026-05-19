@@ -1,0 +1,8 @@
+{
+  "name": "agent-team",
+  "description": "[Placeholder] Multi-agent team coordination for long-running collaborative Claude Code sessions",
+  "author": {
+    "name": "Fomalhaut647",
+    "email": "fomalhaut@stu.pku.edu.cn"
+  }
+}

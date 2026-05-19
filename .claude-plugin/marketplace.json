@@ -1,0 +1,31 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "fomalhaut647-plugins",
+  "description": "Personal Claude Code plugins marketplace by Fomalhaut647",
+  "owner": {
+    "name": "Fomalhaut647",
+    "email": "fomalhaut@stu.pku.edu.cn"
+  },
+  "plugins": [
+    {
+      "name": "agent-team",
+      "description": "[Placeholder] Multi-agent team coordination for long-running collaborative Claude Code sessions",
+      "author": {
+        "name": "Fomalhaut647",
+        "email": "fomalhaut@stu.pku.edu.cn"
+      },
+      "category": "development",
+      "source": "./plugins/agent-team"
+    },
+    {
+      "name": "skill-simplifier",
+      "description": "[Placeholder] Review and simplify existing Claude Code skills for clarity and reuse",
+      "author": {
+        "name": "Fomalhaut647",
+        "email": "fomalhaut@stu.pku.edu.cn"
+      },
+      "category": "development",
+      "source": "./plugins/skill-simplifier"
+    }
+  ]
+}
