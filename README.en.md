@@ -29,15 +29,19 @@ Then browse via `/plugin > Discover` or install a specific plugin:
 .
 ├── .claude-plugin/
 │   └── marketplace.json    # marketplace index
+├── LICENSE                 # applies to this marketplace and every plugin
 └── plugins/
     └── <plugin-name>/
-        ├── .claude-plugin/
-        │   └── plugin.json
-        └── README.md
+        ├── .claude-plugin/plugin.json
+        ├── skills/             # or commands/ / agents/
+        ├── README.md           # Chinese (primary bilingual version)
+        ├── README.en.md        # English mirror
+        ├── CLAUDE.md           # plugin's own contributor guide
+        └── RELEASE-NOTES.md
 ```
 
-Each plugin may optionally include `commands/`, `agents/`, `skills/`, and `.mcp.json`. See the [official plugin docs](https://code.claude.com/docs/en/plugins) for the full schema.
+A plugin may also optionally include `.mcp.json` and similar add-ons. See the [official plugin docs](https://code.claude.com/docs/en/plugins) for the full schema.
 
 ## License
 
-[MIT](LICENSE) — the root LICENSE applies to this marketplace and every plugin (an individual plugin can override by shipping its own LICENSE inside its directory).
+[MIT](LICENSE) — applies to this marketplace and every plugin.

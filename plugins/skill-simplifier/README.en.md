@@ -1,8 +1,8 @@
 # skill-simplifier
 
-A Claude Code plugin with a single skill that audits a SKILL.md (with optional `references/`) or a CLAUDE.md for content duplicating its upstream knowledge sources — the system prompt, Tool Descriptions, other Skills, or other CLAUDE.md files — and removes the duplication.
+> [中文版](README.md)
 
-中文版见 [README.md](README.md)。
+A Claude Code plugin with a single skill that audits a SKILL.md (with optional `references/`) or a CLAUDE.md for content duplicating its upstream knowledge sources — the system prompt, Tool Descriptions, other Skills, or other CLAUDE.md files — and removes the duplication.
 
 ## Why
 

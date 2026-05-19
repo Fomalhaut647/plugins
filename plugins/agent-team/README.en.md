@@ -1,5 +1,7 @@
 # agent-team
 
+> [中文版](README.md)
+
 A Claude Code plugin that gives you two subskills for coordinating long-running multi-agent teams, plus optional reference docs for layering the `superpowers` development workflow on top.
 
 - **Primitive skills** (`agent-team:lead` / `agent-team:teammate`) cover the team mechanism itself — `TeamCreate`, spawn rules, inbox sync, shutdown sequence — independent of any particular development methodology.
@@ -86,19 +88,6 @@ LICENSE lives at the marketplace repo root and applies to this plugin alongside 
 
 - **Lead vs teammate**: their first actions and ongoing protocols are non-overlapping; mixing both into one skill produces 500+ lines of mostly-irrelevant content for whichever role is reading.
 - **Skill vs reference doc**: the superpowers workflow is one mode of using the team primitive — not always relevant. Keeping it as a reference doc means zero context cost when not used and full content when needed.
-
-## How to simplify skill
-
-For example,
-
-~~~text
-你现在需要按顺序做以下几件事
-1. 用 ToolSearch 查看 TeamCreate / TeamDelete / SendMessage / TaskCreate / TaskList / TaskUpdate / TaskGet / EnterWorktree / ExitWorktree 的描述和用法, 了解 Agent Team 及配套工具的使用方法, 了解哪些知识已经由 Description 提供了
-2. 用 Read 阅读 superpowers 和 code-review 的所有 skills 文档, 了解 superpowers 和 code-review 各个 skills 的用法, 了解哪些知识已经由 skill 提供了
-3. 激活 writing-skills 和 skill-creator
-4. Read 当前目录下的所有文档, 了解当前的实现
-5. 依据你的理解调整 agent-team 各个文档的内容, 重点是各司其职不要重复: references 负责描述 superpowers + code-review 的软件开发工作流, 不应该包含可以通过激活 superpowers 和 code-review skill 获取的知识; SKILL.md 负责描述 agent-team 的协调方法, 以及正确引用 references/*.md, 不应该包含 Tool Description 中已经提供的知识, 也不应该包含 references 里的具体开发工作流 (因为有时使用 agent team 并不是为了开发软件, 不用走 references 里写的工作流)
-~~~
 
 ## License
 

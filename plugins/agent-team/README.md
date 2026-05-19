@@ -1,6 +1,6 @@
 # agent-team
 
-> English version: [README.en.md](README.en.md)
+> [English version](README.en.md)
 
 一个 Claude Code plugin，提供两个 subskill 用于协调长期运行的多 agent 团队，外加可选 reference docs 用于在其上叠加 `superpowers` 软件开发工作流。
 
@@ -88,19 +88,6 @@ LICENSE 在 marketplace 仓库根目录，适用于本 plugin 与所有其他 pl
 
 - **Lead vs teammate**：两者的 first actions 和 ongoing protocols 不重叠；混进一个 skill 会让任一角色读到 500+ 行无关内容。
 - **Skill vs reference doc**：superpowers workflow 是 team primitive 的一种使用模式 —— 不总相关。保留为 reference doc 意味着不用时上下文成本为零，用时内容完整。
-
-## 如何简化 skill
-
-举个例子，
-
-~~~text
-你现在需要按顺序做以下几件事
-1. 用 ToolSearch 查看 TeamCreate / TeamDelete / SendMessage / TaskCreate / TaskList / TaskUpdate / TaskGet / EnterWorktree / ExitWorktree 的描述和用法, 了解 Agent Team 及配套工具的使用方法, 了解哪些知识已经由 Description 提供了
-2. 用 Read 阅读 superpowers 和 code-review 的所有 skills 文档, 了解 superpowers 和 code-review 各个 skills 的用法, 了解哪些知识已经由 skill 提供了
-3. 激活 writing-skills 和 skill-creator
-4. Read 当前目录下的所有文档, 了解当前的实现
-5. 依据你的理解调整 agent-team 各个文档的内容, 重点是各司其职不要重复: references 负责描述 superpowers + code-review 的软件开发工作流, 不应该包含可以通过激活 superpowers 和 code-review skill 获取的知识; SKILL.md 负责描述 agent-team 的协调方法, 以及正确引用 references/*.md, 不应该包含 Tool Description 中已经提供的知识, 也不应该包含 references 里的具体开发工作流 (因为有时使用 agent team 并不是为了开发软件, 不用走 references 里写的工作流)
-~~~
 
 ## License
 

@@ -29,15 +29,19 @@
 .
 ├── .claude-plugin/
 │   └── marketplace.json    # marketplace 索引
+├── LICENSE                 # 适用于本 marketplace 及所有 plugin
 └── plugins/
     └── <plugin-name>/
-        ├── .claude-plugin/
-        │   └── plugin.json
-        └── README.md
+        ├── .claude-plugin/plugin.json
+        ├── skills/             # 或 commands/ / agents/
+        ├── README.md           # 中文（双语主版本）
+        ├── README.en.md        # 英文镜像
+        ├── CLAUDE.md           # plugin 自己的贡献者指南
+        └── RELEASE-NOTES.md
 ```
 
-每个 plugin 可选 `commands/`、`agents/`、`skills/`、`.mcp.json` 等子目录与文件。完整 schema 见 [官方 plugin 文档](https://code.claude.com/docs/en/plugins)。
+每个 plugin 还可选 `.mcp.json` 等附加文件。完整 schema 见 [官方 plugin 文档](https://code.claude.com/docs/en/plugins)。
 
 ## 许可证
 
-[MIT](LICENSE) —— 根目录 LICENSE 适用于本 marketplace 及所有 plugin（个别 plugin 若要不同许可，会在自身目录下放置覆盖性 LICENSE）。
+[MIT](LICENSE) —— 适用于本 marketplace 及所有 plugin。
