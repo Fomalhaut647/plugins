@@ -1,7 +1,7 @@
 {
   "name": "agent-team",
   "description": "Two subskills for Claude Code agent team coordination — agent-team:lead orchestrates a team, agent-team:teammate guides each worker. Covers inbox sync protocol, no-nested-teams constraint, spawn templates, and the shutdown sequence. Optional reference docs layer the superpowers + code-review development workflow on top.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "Fomalhaut647",
     "email": "fomalhaut@stu.pku.edu.cn"

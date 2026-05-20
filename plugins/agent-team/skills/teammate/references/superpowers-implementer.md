@@ -5,52 +5,59 @@
 Preconditions：
 
 - `agent-team:teammate` 已激活。那是 team primitive —— identity、inbox sync、dispatch limits。本 doc 假定你已 Read 过它，不会重述。
-- `superpowers` plugin 在 host 上。
+- `superpowers` plugin 在 host 上；`superpowers:using-superpowers` 由 hook 自动注入你的上下文，不需要你显式 `Skill(...)` 激活。
 - lead 的 spawn prompt 给了你 worktree path、spec、plan。
 
 本 doc 把 superpowers 的 skill triggers 映射到你的工作，并告诉你何时派 subagent vs 在自己 context 内做。
 
 (Reviewer teammate 有独立 doc：`references/code-review.md`。)
 
-## Skills this doc invokes
+## Build your task list before doing anything else
 
-把本 doc 要 invoke 的每个 skill 在开头列出，**不是可选项** —— 经验上 Claude 在工作压力下倾向跳过 `Skill(...)` 调用，即使用户已强调。（Tool schema 已由 `agent-team:teammate` SKILL First actions 加载；本 doc 不重新加载。）
+读完 `agent-team:teammate` 和本 doc 后**立刻**用 `TaskCreate` 把整个 session 要做的事建成 task list —— 在 `EnterWorktree`、Read project docs、派任何 subagent **之前**。每完成一项立刻 `TaskUpdate(status="completed")`。
 
-**在 Step 4.1 预加载**（任何任务工作之前）：
+理由：implementer teammate 经验上最常见的失败是"做完一件忘了下一件" —— 漏激活 skill、漏读 prompt 模板、漏派 reviewer subagent、task 跑完忘记 Step 7 wrap-up、PR open 后忘记 Step 9 fix loop。Task list up-front 让 *每个* skill 激活、reference 读取、subagent dispatch 都被显式承认 + 完成后被 mark off，比仰赖记忆稳健得多。本 doc 不另外维护"哪个 skill 何时激活"的索引 —— 下面这份 task list 模板就是索引。
 
-- `superpowers:using-superpowers`
-- `superpowers:subagent-driven-development`
-- `superpowers:dispatching-parallel-agents`
-- `superpowers:requesting-code-review`
+按下面模板生成你自己的 list。模板基于虚构 plan（`docs/plans/Plan3-alice.md` 含 Task A 和 Task B）：把 `<...>` 占位符替换成你环境里的实际值，Task A/B 替换成你 plan 文件里的实际 task 命名，按 plan 里的 task 数扩展（Task C/D/... 各一条，形式同 Task B）：
 
-**在 implementer subagent prompt 内点名**（Step 5/6）—— subagent 调用它们，不是你：
+```
+1.  EnterWorktree(path=".claude/worktrees/<your-branch>")                               [Step 4.1]
+2.  Read docs/overview.md + docs/vision.md + docs/specs/<module>.md
+         + docs/plans/PlanN-<your-name>.md                                              [Step 4.2]
+3.  Invoke Skill('superpowers:subagent-driven-development')
+         + Skill('superpowers:dispatching-parallel-agents')
+       + Read <base>/subagent-driven-development/implementer-prompt.md                  [Step 5]
+4.  Task A: Dispatch implementer subagent — <A 一句话描述>
+        (prompt 内点名 superpowers:test-driven-development /
+         systematic-debugging / verification-before-completion)                         [Step 5]
+5.  Read <base>/subagent-driven-development/spec-reviewer-prompt.md                     [Step 6]
+6.  Task A: Dispatch spec reviewer subagent                                             [Step 6]
+7.  Read <base>/subagent-driven-development/code-quality-reviewer-prompt.md
+       + Invoke Skill('superpowers:requesting-code-review')
+       + Read <base>/requesting-code-review/code-reviewer.md                            [Step 6]
+8.  Task A: Dispatch code-quality reviewer subagent                                     [Step 6]
+9.  Invoke Skill('superpowers:receiving-code-review')                                   [Step 6 起持续生效]
+10. Task B: implementer → spec reviewer → code-quality reviewer (按 Task A 模板复用，
+        skill / template 已在 context，不再重复 Read / Invoke)                          [Step 5/6]
+11. (Task C / D / ... 各一条，形式同 Task B)                                            [Step 5/6]
+12. Invoke Skill('superpowers:finishing-a-development-branch')                          [Step 7]
+13. Write docs/progress/PlanN-<your-name>.md                                            [Step 7]
+14. Invoke Skill('commit-commands:commit-push-pr')                                      [Step 7]
+15. Commit + push + open PR; SendMessage lead with PR URL                               [Step 7]
+16. Fix loop with reviewer teammate (PR open 后才执行，可能多轮)                          [Step 9]
+```
 
-- `superpowers:test-driven-development`
-- `superpowers:systematic-debugging`
-- `superpowers:verification-before-completion`
+`<base>` 用 `Skill(...)` 返回里 "Base directory for this skill: <path>" 给的目录路径。
 
-**你在特定触发点 invoke**：
+**review fix loop round-trip 不拆新条目**：reviewer 提 issue → 重派 implementer → 重派 reviewer 这条链全部在原 reviewer dispatch 项下完成（保持 list 干净）—— 但该条 **不能 mark completed 直到 reviewer 返回 clean**。Task A 的 "implementer subagent" 项同理：implementer 报 DONE 不等于 mark completed，要等 spec + code-quality reviewer 全部 clean 才算。Task B / C / ... 那种合并条目同样规则 —— 三个 subagent 全 clean 才 mark。
 
-- `superpowers:receiving-code-review` —— Step 6 review 反馈；持续生效到 Step 9 reviewer-teammate fix loop。
-- `superpowers:finishing-a-development-branch` —— Step 7。
-- `commit-commands:commit-push-pr` —— Step 7。
+下面的 Step 4-9 是 task list 各条的详细执行手册。
 
 ## Step 4 — startup
 
 `agent-team:teammate` 的 First actions（ToolSearch、Read team config、drain inbox）之后，做这些：
 
-### 4.1 Unconditional quadruple-invoke
-
-在 Read project docs 或做任何任务工作 *之前* invoke 这四个 skill：
-
-1. `Skill('superpowers:using-superpowers')` —— meta-skill，治理其他全部。
-2. `Skill('superpowers:subagent-driven-development')` —— orchestrate-don't-code pattern。
-3. `Skill('superpowers:dispatching-parallel-agents')` —— 任何 subagent fan-out 时用。
-4. `Skill('superpowers:requesting-code-review')` —— 预加载，使 dispatch 模板在 Step 6 触发时已在 context。按需 lazy-load 在实践中漏过了 trigger：当工作压力到达 spec/code-quality review 边界时，没预加载 skill 的 implementer 显著更可能跳过它。
-
-全部 up-front invoke，不等 trigger。理由：在第一个 task 开始前确立 orchestration 纪律可以防止你在工作压力到来时滑回 direct-coding 习惯。
-
-### 4.2 Enter your worktree
+### 4.1 Enter your worktree
 
 ```
 EnterWorktree(path=".claude/worktrees/<your-branch>")
@@ -58,7 +65,7 @@ EnterWorktree(path=".claude/worktrees/<your-branch>")
 
 lead 在 Step 3.2 预创建。你的 `name`、branch 名、worktree basename 按约定相同 —— 这种一致性让 filesystem-based 检测（以及未来 hook 自动化）能识别你的 session。
 
-### 4.3 Read the brief and the static docs
+### 4.2 Read the brief and the static docs
 
 按顺序：
 
@@ -70,9 +77,9 @@ lead 在 Step 3.2 预创建。你的 `name`、branch 名、worktree basename 按
 
 理解好这些可以省下很多 subagent round-trip —— 你派的 subagent 没读过这些，如果你不能在 prompt 里总结相关约束，它们会产出混乱的输出。
 
-### 4.4 The work loop
+### 4.3 The work loop
 
-per-step 工作循环，每个 "step" = 你那部分 task list 里的一个 task：
+per-step 工作循环，每个 "step" = 你 task list 里的一条：
 
 ```
 do the step's work (Steps 5–6 for implement+review; Step 7 for PR)
@@ -85,7 +92,9 @@ do the step's work (Steps 5–6 for implement+review; Step 7 for PR)
 
 ## Steps 5–6 — per-task implementer + two-stage review (run via `superpowers:subagent-driven-development`)
 
-对每个实现 task，按 `superpowers:subagent-driven-development`。该 skill 描述了整个 pattern —— implementer subagent → spec reviewer subagent → code-quality reviewer subagent → fix loop —— 你应该完整读一遍并按字面执行。
+对每个实现 task，按 `superpowers:subagent-driven-development`：implementer subagent → spec reviewer subagent → code-quality reviewer subagent → fix loop。
+
+**实际写 production code 的是 subagent，不是你**。如果你发现自己开始 `Edit`/`Write` task 里的 prod 文件，停下 —— 你漏掉了 dispatch 步骤，回去派 implementer subagent。同理，implementer subagent 报告 DONE 之后**不要直接 mark task completed**，必须先派 spec reviewer subagent，spec clean 后再派 code-quality reviewer subagent，**两个都 clean** 才能 mark completed。如果你发现自己即将跳过 reviewer 直接进入下一个 task，停下 —— 这是最常被漏的步骤。
 
 三条 team-specific 补充在 skill 之上：
 
@@ -108,8 +117,8 @@ do the step's work (Steps 5–6 for implement+review; Step 7 for PR)
 
 Steps 5-6 在所有 task 上都 clean 之后：
 
-1. **创建你自己的 `docs/progress/PlanN-<your-name>.md`**（项目采用 docs/ layout 时 —— 文件名与你的 `docs/plans/PlanN-<your-name>.md` 1:1）。写你 module 里实际发生了什么：你实现了什么、你哪里偏离 spec/plan、你跳过了什么及为何、未解决 concern、follow-up 建议。这是项目对你 module 的永久 "what happened" 记录 —— 你写它因为你对自己 module 视角最清楚。每 teammate 独立文件，所以并行 PR 永远不会在这条路径冲突。
-2. **`superpowers:finishing-a-development-branch`** —— 选 Option 2（Push and Create PR）。
+1. **`superpowers:finishing-a-development-branch`** —— 选 Option 2（Push and Create PR）。它会指导你下面的 progress doc + commit + PR 流程。
+2. **创建你自己的 `docs/progress/PlanN-<your-name>.md`**（项目采用 docs/ layout 时 —— 文件名与你的 `docs/plans/PlanN-<your-name>.md` 1:1）。写你 module 里实际发生了什么：你实现了什么、你哪里偏离 spec/plan、你跳过了什么及为何、未解决 concern、follow-up 建议。这是项目对你 module 的永久 "what happened" 记录 —— 你写它因为你对自己 module 视角最清楚。每 teammate 独立文件，所以并行 PR 永远不会在这条路径冲突。
 3. **`commit-commands:commit-push-pr`** —— 处理 commit + push + PR 创建。按它自己的 commit-granularity 指引。你的 `docs/progress/PlanN-<your-name>.md` 是同一 PR 的一部分。
 4. **向 lead 汇报 PR URL**：用 `SendMessage`。先做 `agent-team:teammate` 的 before-`SendMessage` inbox check。
 5. **不要 `ExitWorktree(action="remove")`。** 你是按 `path` 进入的，lead 在他们的 Step 10 处理 worktree 删除（在他们自己 session 里用 `EnterWorktree(name="<branch>")` + `ExitWorktree(action="remove")`）。把 worktree 留在 disk 上、idle、等待。
@@ -129,7 +138,4 @@ PR open 后，lead spawn 一个独立的 reviewer teammate（他们的 Step 8）
 - `agent-team:teammate` —— 必需 peer；team primitive。先 invoke。
 - `skills/teammate/references/code-review.md` —— reviewer teammate 的 sibling doc。
 - `skills/lead/references/superpowers-workflow.md` —— lead 侧 workflow doc（orchestration Steps 1-3、8、10）。
-- `superpowers:using-superpowers` / `subagent-driven-development` / `dispatching-parallel-agents` / `requesting-code-review` —— 在 Step 4.1 up front invoke。
-- `superpowers:test-driven-development` / `systematic-debugging` / `verification-before-completion` —— 在 Step 5/6 implementer subagent prompt 内点名。
-- `superpowers:receiving-code-review` —— 在 Step 6 由你直接 invoke（Step 9 重新生效）。
-- `superpowers:finishing-a-development-branch` / `commit-commands:commit-push-pr` —— 在 Step 7 invoke。
+- 每个 superpowers / commit-commands skill 何时激活、何时 Read sibling reference —— 见文档开头的 task list 模板，不在这里重复列。

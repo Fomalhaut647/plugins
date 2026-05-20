@@ -15,21 +15,46 @@ Preconditions：
 把本 doc 要 invoke 的每个 skill 在开头列出，**不是可选项** —— 经验上 Claude 在工作压力下倾向跳过 `Skill(...)` 调用，即使用户已强调。（Tool schema 已由 `agent-team:teammate` SKILL First actions 加载；本 doc 不重新加载。）
 
 - `code-review:code-review` —— 每轮 review 调一次（实际 review pipeline）。
-- `superpowers:receiving-code-review` —— 处理 implementer pushback 时应用。
 
 ## Your role
 
 你 review implementer teammate 的 PR、发布结果，并与 implementer 跑一个 `SendMessage` fix loop 直到 PR `**APPROVED**`。你不写代码；你不需要 worktree（`code-review:code-review` 通过 `gh` 操作 PR diff）。
 
-## Startup
+你处于整个 superpowers 开发工作流的 **Step 8（startup）+ Step 9（review loop）** 阶段；Step 编号跟 lead 侧 `superpowers-workflow.md` 和 implementer 侧 `superpowers-implementer.md` 共享 —— `SendMessage` 引用 "Step 9" 三方含义一致。
+
+## Step 8 — startup
 
 `agent-team:teammate` First actions（ToolSearch、Read team config、drain inbox）之后：
 
 1. 从 spawn brief 记下 PR URL 和 implementer teammate 的 name。
-2. 跳过 `EnterWorktree` —— 你不需要 worktree。
+2. 跳过 `EnterWorktree` —— 你不需要 worktree。你的 cwd 是 lead spawn 你时所在的 repo root（通常 main branch 的 checkout），`gh` 在这里能跑。注意：本地 `Read` 看到的文件是该 checkout 的状态，不是 PR head；要拿 PR head sha 上的文件用下面 5 条命令。
 3. Invoke `Skill('code-review:code-review')` **一次** —— 这是知识型 skill，激活一次后 pipeline 操作步骤已在 context，后续每轮 review 直接按它的方法跑，不再需要重新 invoke。
 
-## The review loop
+### 拿 PR head sha 上的内容（review subagent 用得上的标准命令）
+
+```bash
+# PR head sha
+HEAD_SHA=$(gh pr view <PR#> --json headRefOid -q .headRefOid)
+
+# Unified diff（diff-only 的 review 用这个）
+gh pr diff <PR#>
+
+# 列 PR 改的文件
+gh pr view <PR#> --json files -q '.files[].path'
+
+# 拿 PR head sha 上单个文件全文（diff 之外要读上下文 / code comments 时用）
+gh api "repos/{owner}/{repo}/contents/<path>?ref=$HEAD_SHA" -q .content | base64 -d
+# 或先 fetch 再用 git show
+git fetch origin "pull/<PR#>/head:pr-<PR#>"
+git show "pr-<PR#>:<path>"
+
+# 在 PR head sha 上跑 blame（Agent #3 git blame 子任务用）
+git blame "pr-<PR#>" -- <path>
+```
+
+派 5 个并行 review subagent 时，在它们 prompt 里点名上面命令模板 —— subagent 默认 `Read` 工具读到的是 main checkout 上的文件，不会自动对齐 PR head，prompt 里不指就会审错版本。
+
+## Step 9 — the review loop
 
 每一轮跑 review 并把 findings 包装成 team 的 protocol（`code-review:code-review` 已在 startup 激活，按它教的方法跑即可，不重复 invoke）：
 
@@ -48,14 +73,13 @@ Preconditions：
 
 5. **发布 `**APPROVED**` 之后**，`SendMessage` lead 最终状态，然后 idle 等 shutdown。Before-`SendMessage` inbox check 先做。
 
-## Receiving pushback from the implementer
+### Receiving pushback from the implementer
 
-implementer push back 时，镜像应用 `superpowers:receiving-code-review` 的 verify-before-act 纪律 —— 读他们的 reasoning、对照 codebase 验证、决定 drop 还是 restate。
+implementer push back 时（仍在 Step 9 fix loop 内），镜像应用 `superpowers:receiving-code-review` 的 verify-before-act 纪律 —— 读他们的 reasoning、对照 codebase 验证、决定 drop 还是 restate。
 
 ## Related docs and skills
 
 - `agent-team:teammate` —— 必需 peer；team primitive。先 invoke。
-- `skills/teammate/references/superpowers-implementer.md` —— implementer teammate 的 sibling doc。
-- `skills/lead/references/superpowers-workflow.md` —— lead 侧 workflow doc。
+- `skills/teammate/references/superpowers-implementer.md` —— implementer teammate 的 sibling doc（持有 Step 4-7、Step 9 的 implementer 侧）。
+- `skills/lead/references/superpowers-workflow.md` —— lead 侧 workflow doc（持有 Step 0-3、Step 8、Step 10）。
 - `code-review:code-review` —— 你每轮 loop 调用的实际 review skill。
-- `superpowers:receiving-code-review` —— 描述 implementer 如何评估你的反馈（implementer push back 时的有用 context）。
