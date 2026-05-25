@@ -128,11 +128,15 @@ Spawn-prompt 结构同 Step 3.4，区别在：
 
 - `name="reviewer-pr-<N>"`（上一轮的同名 reviewer 已在上一轮结束时被你 shutdown，所以名字可复用）。
 - brief 告诉 reviewer：PR URL、**implementer 的 worktree path**、第一动作 `Skill('agent-team:teammate')`、然后 Read 自己 skill 的 `references/code-review.md`。
-- **有 worktree** —— reviewer `EnterWorktree(path=<implementer 的 worktree>)` 进 PR head 分支的 checkout，内置 `code-review` 的 `--comment` 靠当前分支名定位 open PR。reviewer 只读，不 commit、不 `ExitWorktree`。
+- **有 worktree** —— reviewer `EnterWorktree(path=<implementer 的 worktree>)` 进 PR head 分支的 checkout。内置 `code-review` 的 `--comment` 做两件事：把**每一条** finding 发成 inline PR comment（持久留痕、人类可审），并靠当前分支名定位 open PR。这是 reviewer 固定行为，**不要**在 spawn prompt 里要它省掉 `--comment` 或「只把 findings 报给你、别评论」—— 留痕与你 Step 9 决定修哪些是正交的两件事。reviewer 只读，不 commit、不 `ExitWorktree`。
 
 ## Step 9 — fix loop（你是中枢）
 
-reviewer 不直接联系 implementer —— 你串起每一轮。一轮长这样：
+reviewer 不直接联系 implementer —— 你串起每一轮。
+
+> **「决定修哪些」与 reviewer 评论 PR 是正交的两件事。** reviewer 在 Step 8 已用 `--comment` 把**全部** findings 落成 PR inline comment 作为留痕；你随后挑出值得修的子集只决定发给 implementer 的清单 —— 既**不**回头删评论，也**不**代表 reviewer 本就不该评论。被你判为「不修」的 finding，其评论仍留在 PR 上作为完整审计轨迹。（曾观察到 lead 把「由我决定修哪些」误读为「reviewer 不该评论、全部转发我决策」而丢失留痕 —— 不要这样。）
+
+一轮长这样：
 
 1. **reviewer 报 findings。** 它跑完 `code-review` 后 `SendMessage` 你 "PR #N reviewed" 外加 findings（按严重度排序、无 severity 标签的数组）。
 2. **关闭本轮 reviewer。** 直接 `SendMessage(to=<reviewer>, message={"type":"shutdown_request"})` 并等它的 `shutdown_response`。`agent-team:lead` SKILL.md 有条硬规则「发 `shutdown_request` 前先向用户汇报」，理由是「搞错会丢 in-flight 工作或让用户惊讶」。一次性 reviewer 不触发这个理由：它的 findings 已落到 PR 和给你的消息里，没有 in-flight 工作可丢。所以**这是那条硬规则对一次性 reviewer 的 workflow 特定例外，关闭它无须先汇报用户**。implementer **不在**例外内（它持有 worktree + in-flight 修复，仍须先汇报 —— 见 Step 10）。
