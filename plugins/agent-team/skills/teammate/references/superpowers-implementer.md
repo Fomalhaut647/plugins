@@ -132,10 +132,11 @@ PR open 后，lead 会对它 spawn 一个一次性 reviewer teammate（reviewer 
 
 修复轮：
 
-1. `superpowers:receiving-code-review` 从 Step 6 起仍生效 —— 对清单里每条应用（行动前 verify，对照 codebase）。觉得某条是误报，push back 给 **lead**（不是 reviewer —— 它一发完 findings 就被 lead 关闭了），由 lead 定夺。
-2. 派 subagent 做修复，方式同 Steps 5-6 —— `systematic-debugging` 调研、implementer 应用修复、然后 spec + code-quality reviewer self-review。只修 lead 清单里的 bug，不自行扩大范围。
-3. `git commit` + `git push`。
-4. `SendMessage` lead："Pushed fix for issues X, Y on PR #N. Ready for re-review."。先做 before-`SendMessage` inbox check。然后 idle —— lead 会 spawn 新一轮 reviewer 并把判定结果发回给你（「通过」，或下一份清单）。从本节顶部循环。
+1. **先拉取 PR 上的 inline review comments。** lead 的消息是**选择**（哪些 finding 值得修），不是 finding 的完整副本 —— 每条 finding 的精确 file:line 定位和 reviewer 的完整理由留痕在 PR 上（reviewer 用 `--comment` 发的）。动手前用 `gh` 把它们拉下来（如 `gh api repos/{owner}/{repo}/pulls/<N>/comments`），按 lead 选中的那些对齐。只凭 lead 的简述就开修，会丢掉定位与理由，也让下一步的 verify / push back 无据可依。
+2. `superpowers:receiving-code-review` 从 Step 6 起仍生效 —— 对清单里每条应用（行动前 verify，对照 codebase 和 reviewer 在评论里的理由）。觉得某条是误报，push back 给 **lead**（不是 reviewer —— 它一发完 findings 就被 lead 关闭了），由 lead 定夺。
+3. 派 subagent 做修复，方式同 Steps 5-6 —— `systematic-debugging` 调研、implementer 应用修复、然后 spec + code-quality reviewer self-review。只修 lead 清单里的 bug，不自行扩大范围。
+4. `git commit` + `git push`。
+5. `SendMessage` lead："Pushed fix for issues X, Y on PR #N. Ready for re-review."。先做 before-`SendMessage` inbox check。然后 idle —— lead 会 spawn 新一轮 reviewer 并把判定结果发回给你（「通过」，或下一份清单）。从本节顶部循环。
 
 ## Related docs and skills
 
