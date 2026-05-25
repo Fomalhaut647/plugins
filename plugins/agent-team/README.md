@@ -40,7 +40,7 @@
 |---|---|---|
 | `skills/lead/references/superpowers-workflow.md` | lead，运行完整 superpowers 开发工作流时 | Step 1-3（brainstorming、writing-plans、worktree 创建循环 + spawn）、Step 8（reviewer teammate spawn）、Step 10（merge + cleanup，使用 `ExitWorktree(action="remove")`） |
 | `skills/teammate/references/superpowers-implementer.md` | implementer teammate，被 spawn 进 superpowers workflow 并带 worktree + spec + plan 时 | Step 4 startup（quadruple skill invoke 含 `requesting-code-review`、`EnterWorktree`、Read brief）、Step 5 implementer subagent prompt 模板、Step 6 两阶段 review subagent pattern、Step 7 PR 提交 + per-teammate progress 文件、Step 9 implementer 这一侧的 fix loop |
-| `skills/teammate/references/code-review.md` | reviewer teammate（`reviewer-pr-<N>`），spawn 时带 PR URL | review loop —— invoke `code-review:code-review`、用 `gh pr comment` 发布，首行约定 `**APPROVED**` / `**Changes requested**`、与 implementer 之间的 SendMessage 握手直至批准 |
+| `skills/teammate/references/code-review.md` | 一次性 reviewer teammate（`reviewer-pr-<N>`），spawn 时带 PR URL + implementer 的 worktree path | 进 implementer 的 worktree 跑一次内置 `code-review`（`xhigh --comment`）→ findings 发成 inline PR comment 并转发给 lead → idle 等关闭；哪些 finding 值得修、是否再 review，都由 lead 判定 |
 
 Note：`superpowers-workflow.md` 同时描述了一个可选的 `docs/` 项目 layout（`vision.md` / `overview.md` / `specs/A-xxx.md` / `plans/PlanN-<teammate>.md` / `progress/PlanN-<teammate>.md`），适合跨多次 agent-team session 的长期项目。详见其 Step 0。
 

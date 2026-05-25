@@ -18,7 +18,7 @@ Preconditions：
 - `superpowers:writing-plans` (Step 2)
 - `superpowers:using-git-worktrees` (Step 3.1)
 
-其他 `superpowers:*` 和 `code-review:code-review` skill 在 teammate *内部* 跑（详见 teammate-side reference docs），不在你的 context。
+其他 `superpowers:*` 和内置 `code-review` skill 在 teammate *内部* 跑（详见 teammate-side reference docs），不在你的 context。
 
 ## Step 0 — project doc layout (optional convention)
 
@@ -118,30 +118,40 @@ Steps 4-7 在实施 teammate *内部* 发生（per-task TDD → two-stage review
 - 如果人类用户更新了 plan，`SendMessage` 方向变化。teammate 的 inbox-sync 协议（来自 `agent-team:teammate`）会在他们的下一个 step 边界 pick up。
 - 抵制偷看 worktree / log 文件。`TaskList`、`TaskGet`、incoming `SendMessage` 是 canonical 可见面。
 
-## Step 8 — spawn a reviewer teammate per PR
+## Step 8 — spawn a one-shot reviewer teammate
 
-当 implementer teammate `SendMessage` 你 PR URL 时，对该 PR spawn 一个 **独立的** reviewer teammate。Spawn-prompt 结构同 Step 3.4，区别在：
+每当需要 review 一个 PR（implementer 首次报 PR URL，或后续每轮 implementer 报「修复已 push，ready for re-review」），对该 PR spawn 一个**一次性**的 reviewer teammate。它跑一轮 `code-review` 就完事 —— 每轮都换一个全新 reviewer（fresh eyes 防锚定偏见、修复期间不空占资源），loop 由你在 Step 9 串。
 
-- `name="reviewer-pr-<N>"`。
-- brief 告诉 reviewer：PR URL、第一动作 `Skill('agent-team:teammate')`、然后 Read 自己 skill 的 `references/code-review.md`（指导 review loop）。
-- 无 worktree —— `code-review:code-review` 通过 `gh` 操作 PR diff，不是 local checkout。
+先确保该 PR 的 implementer 此刻 idle（已报 PR ready 或修复已 push、不在写 worktree）—— reviewer 会进 implementer 的 worktree 只读跑 review，时序上不能和 implementer 的写撞上。
 
-## Step 9 — implementer ↔ reviewer fix loop
+Spawn-prompt 结构同 Step 3.4，区别在：
 
-这在两个 teammate *内部* 跑（implementer 拉 reviewer comment、派 subagent 做修复、push；reviewer 重审；loop）。在 team-lead 层面：
+- `name="reviewer-pr-<N>"`（上一轮的同名 reviewer 已在上一轮结束时被你 shutdown，所以名字可复用）。
+- brief 告诉 reviewer：PR URL、**implementer 的 worktree path**、第一动作 `Skill('agent-team:teammate')`、然后 Read 自己 skill 的 `references/code-review.md`。
+- **有 worktree** —— reviewer `EnterWorktree(path=<implementer 的 worktree>)` 进 PR head 分支的 checkout，内置 `code-review` 的 `--comment` 靠当前分支名定位 open PR。reviewer 只读，不 commit、不 `ExitWorktree`。
 
-- 观察两个 teammate 之间的 `SendMessage` 交换。
-- 不要介入，除非某一方 stall —— 通常是因为 blocked-state 报告或需要人类输入的 conflict。
-- 当 reviewer 最终 PR comment 读到 `**APPROVED**`，两个 teammate 都会 `SendMessage` 你最终 DONE 状态。
+## Step 9 — fix loop（你是中枢）
+
+reviewer 不直接联系 implementer —— 你串起每一轮。一轮长这样：
+
+1. **reviewer 报 findings。** 它跑完 `code-review` 后 `SendMessage` 你 "PR #N reviewed" 外加 findings（按严重度排序、无 severity 标签的数组）。
+2. **关闭本轮 reviewer。** 直接 `SendMessage(to=<reviewer>, message={"type":"shutdown_request"})` 并等它的 `shutdown_response`。`agent-team:lead` SKILL.md 有条硬规则「发 `shutdown_request` 前先向用户汇报」，理由是「搞错会丢 in-flight 工作或让用户惊讶」。一次性 reviewer 不触发这个理由：它的 findings 已落到 PR 和给你的消息里，没有 in-flight 工作可丢。所以**这是那条硬规则对一次性 reviewer 的 workflow 特定例外，关闭它无须先汇报用户**。implementer **不在**例外内（它持有 worktree + in-flight 修复，仍须先汇报 —— 见 Step 10）。
+3. **判定哪些值得修。** 看 findings，按你的全局视野（plan scope、与其他 teammate 的边界、用户优先级）挑出值得修的。`code-review` 给的是「可能有问题」不是「必须修」—— 不是每条都要修，靠前的更严重。
+4. **把判定结果发给 implementer：**
+   - 没有值得修的 → `SendMessage` implementer「review 通过」。该 PR 的 fix loop 到此结束，implementer 会回你最终 DONE。
+   - 有值得修的 → `SendMessage` implementer 一份要修的 bug 清单。implementer 修完、push、回你 "ready for re-review"。
+5. **收到 implementer 的 "ready for re-review" 后**，回到 Step 8 对同一 PR spawn 下一轮一次性 reviewer。循环，直到第 4 步你判定「无值得修的」。
+
+implementer 若对某条 finding push back（认为误报），由你定夺要不要从清单里撤掉。
 
 ## Step 10 — merge + shutdown + TeamDelete
 
-全部 PR `**APPROVED**`。从这里开始：
+全部 PR 都已通过你的 review 判定（Step 9 第 4 步「review 通过」）。从这里开始：
 
 1. **向用户汇报团队状态。** 每个 teammate：最新已知状态、PR URL + 状态、worktree path。请求 shutdown 批准。
 2. **拿到独立的 merge 批准。** 用户可能想 merge 前最后看一眼 PR —— 不要把它与 shutdown 批准 bundle 在一起。
-3. **并行 shutdown 全部 teammate** —— 一个 message，每个 teammate 一条 `SendMessage(to=<member>, message={"type":"shutdown_request"})`。等每个 `shutdown_response{approve: true}` 都回来。
-4. **删除每个 implementer worktree 并 merge 它的 PR。** Reviewer teammate 没有 worktree，所以上面的 shutdown 就够了。对每个 implementer teammate：
+3. **并行 shutdown 剩下的 teammate** —— 此时只剩 implementer（reviewer 已在 Step 9 第 2 步逐轮关闭）。一个 message，每个 teammate 一条 `SendMessage(to=<member>, message={"type":"shutdown_request"})`。等每个 `shutdown_response{approve: true}` 都回来。
+4. **删除每个 implementer worktree 并 merge 它的 PR。** Reviewer teammate 是一次性的、每轮已在 Step 9 关闭，且没有自己的 worktree（进的是 implementer 的），所以这里无需再管它们。对每个 implementer teammate：
 
    ```
    EnterWorktree(name="<branch>")               # re-enter (still exists from Step 3.2)
@@ -167,4 +177,4 @@ Steps 4-7 在实施 teammate *内部* 发生（per-task TDD → two-stage review
 - `skills/teammate/references/superpowers-implementer.md` —— implementer 侧的 workflow doc。每个 implementer teammate 在 startup 时 Read，当你的 spawn prompt 信号 superpowers workflow。
 - `skills/teammate/references/code-review.md` —— reviewer 侧的 workflow doc。每个 reviewer teammate 在 startup 时 Read。
 - `superpowers:brainstorming` / `writing-plans` / `using-git-worktrees` —— 在本 doc 的 Step 1-3 直接 invoke。
-- 其他 `superpowers:*` 和 `code-review:code-review` —— 在 teammate 内部按自己的 skill 协议 invoke，不由你调用。
+- 其他 `superpowers:*` 和内置 `code-review` —— 在 teammate 内部按自己的 skill 协议 invoke，不由你调用。

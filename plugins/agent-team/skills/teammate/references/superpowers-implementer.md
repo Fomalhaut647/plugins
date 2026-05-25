@@ -44,7 +44,7 @@ Preconditions：
 13. Write docs/progress/PlanN-<your-name>.md                                            [Step 7]
 14. Invoke Skill('commit-commands:commit-push-pr')                                      [Step 7]
 15. Commit + push + open PR; SendMessage lead with PR URL                               [Step 7]
-16. Fix loop with reviewer teammate (PR open 后才执行，可能多轮)                          [Step 9]
+16. Fix loop（经 lead 中转：lead 给清单 → 修 → push → 等下一轮，可能多轮）               [Step 9]
 ```
 
 `<base>` 用 `Skill(...)` 返回里 "Base directory for this skill: <path>" 给的目录路径。
@@ -109,7 +109,7 @@ do the step's work (Steps 5–6 for implement+review; Step 7 for PR)
    在你的 DONE 报告里列出 invoke 了哪些 skill 以及每个贡献了什么（一行）。
    ```
 
-2. **Reviewer 派遣经 `superpowers:requesting-code-review`；review 反馈经 `superpowers:receiving-code-review` 评估。** 后者持续生效到 Step 9 reviewer-teammate fix loop。
+2. **Reviewer 派遣经 `superpowers:requesting-code-review`；review 反馈经 `superpowers:receiving-code-review` 评估。** 后者持续生效到 Step 9 经 lead 中转的 fix loop。
 
 修复时 re-dispatch implementer subagent；re-review 时 re-dispatch reviewer subagent。直到两个 reviewer 都返回 clean，再 mark task 完成、开始下一个。
 
@@ -123,15 +123,19 @@ Steps 5-6 在所有 task 上都 clean 之后：
 4. **向 lead 汇报 PR URL**：用 `SendMessage`。先做 `agent-team:teammate` 的 before-`SendMessage` inbox check。
 5. **不要 `ExitWorktree(action="remove")`。** 你是按 `path` 进入的，lead 在他们的 Step 10 处理 worktree 删除（在他们自己 session 里用 `EnterWorktree(name="<branch>")` + `ExitWorktree(action="remove")`）。把 worktree 留在 disk 上、idle、等待。
 
-## Step 9 — fix loop with the reviewer teammate
+## Step 9 — fix loop（经 lead 中转）
 
-PR open 后，lead spawn 一个独立的 reviewer teammate（他们的 Step 8）。reviewer 消息 "I posted review on PR #N, go pull them" 时：
+PR open 后，lead 会对它 spawn 一个一次性 reviewer teammate（reviewer 的 Step 8）跑一轮 `code-review`。reviewer **不**直接联系你 —— review findings 由 lead 判定后转给你（哪些值得修是 lead 的决定，因为 `code-review` 的 findings 无 severity 标签、只按顺序排严重度，而 scope 取舍需要 lead 的全局视野）。lead 会发以下两类消息之一：
 
-1. 拉完整 comment thread：`gh api repos/{owner}/{repo}/pulls/{N}/comments`（不只是 top-level summary）。
-2. `superpowers:receiving-code-review` 从 Step 6 起仍生效 —— 对每条 comment 应用（行动前 verify，错的 push back）。
-3. 派 subagent 做修复工作，方式同 Steps 5-6 —— `systematic-debugging` 调研、implementer 应用修复、然后 spec + code-quality reviewer self-review 后 push。
-4. `git commit` + `git push`。`SendMessage` reviewer teammate："Pushed fix for issues X, Y. Please re-review."。先做 before-`SendMessage` inbox check。
-5. Reviewer 下一条 PR comment：`**Changes requested**` → loop。`**APPROVED**` → `SendMessage` lead 最终状态，然后 idle。
+- **「review 通过」**（lead 判定本轮没有值得修的 bug）→ `SendMessage` lead 最终 DONE 状态，然后 idle 等 shutdown。本 PR 的 fix loop 结束。
+- **一份要修的 bug 清单**（lead 从 reviewer findings 里挑出他认为值得修的）→ 执行下面的修复轮。
+
+修复轮：
+
+1. `superpowers:receiving-code-review` 从 Step 6 起仍生效 —— 对清单里每条应用（行动前 verify，对照 codebase）。觉得某条是误报，push back 给 **lead**（不是 reviewer —— 它一发完 findings 就被 lead 关闭了），由 lead 定夺。
+2. 派 subagent 做修复，方式同 Steps 5-6 —— `systematic-debugging` 调研、implementer 应用修复、然后 spec + code-quality reviewer self-review。只修 lead 清单里的 bug，不自行扩大范围。
+3. `git commit` + `git push`。
+4. `SendMessage` lead："Pushed fix for issues X, Y on PR #N. Ready for re-review."。先做 before-`SendMessage` inbox check。然后 idle —— lead 会 spawn 新一轮 reviewer 并把判定结果发回给你（「通过」，或下一份清单）。从本节顶部循环。
 
 ## Related docs and skills
 
