@@ -1,5 +1,14 @@
 # agent-team Release Notes
 
+## v0.4.0
+
+确立 lead 的「你管 WHAT，不管 HOW」职责边界。根因：lead 的 context 里只有各 teammate / superpowers skill 的 description、没有 body，残缺转述执行细节（code-review effort 档位、何时派 subagent、起手调哪个 skill 等）会被 teammate 当权威而跳过自己 skill 的完整流程、退化执行。
+
+- **lead 默认只传 WHAT**（任务 / scope / 依赖 / 该读哪份 doc），不随口转述 teammate skill 的 HOW；scope 意图用意图措辞，不 translate 成操作档位 / 步骤。
+- **覆盖要显式**：lead 持全局视野，有权因全局原因让 teammate 偏离 skill 默认做法，但必须明说「这是覆盖 + 理由」，不能把覆盖伪装成「教 skill 怎么用」。
+- 收编此前三类点状退化为同一根因的实例：reviewer effort 降档、implementer 退化为 inline development、reviewer 不并行探索。
+- 本版只加固 lead 侧；teammate 侧是否需要配套改动（如偏离 skill 前的澄清闸门）留待真实 session 实测后再定。
+
 ## v0.3.0
 
 Reviewer teammate 改为一次性模型，并从 `code-review:code-review` 插件切换到 Claude Code 内置 `code-review` skill。

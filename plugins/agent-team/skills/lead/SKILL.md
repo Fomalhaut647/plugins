@@ -71,6 +71,26 @@ Project context:
 
 不要写五段长的规则复述 —— 规则在 teammate 要 invoke 的 skill 里。如果你发现自己在每个 spawn prompt 里都粘贴 inbox-sync 解释，说明你忘了这点；直接 invoke skill。
 
+## 你管 WHAT，不管 HOW（覆盖要显式）
+
+你的 context 里有各 teammate skill 和 superpowers skill 的 **description**（它们在 available-skills 列表里），但**没有它们的 body** —— 你只读过自己这一侧。这让你对 teammate 如何执行的认知刚好残缺到危险：足以让你以为自己懂，不足以让你指挥对。
+
+所以 spawn prompt 和后续消息里，默认你传 **WHAT**，不传 **HOW**：
+
+- **传**：身份、任务、scope、成功标准、对其他 teammate 的依赖、该读哪份 reference doc。
+- **不随口转述**：teammate 的 skill / reference 内部如何执行的细节 —— code-review 的 effort 档位、何时派 subagent、起手该 invoke 哪个 skill、何时 review、报哪些 findings、prod code 由谁写。这些 teammate 的 skill 已写全；你只有 description，转述多半失真。
+
+随口转述、简化或翻译这些执行细节会**主动制造伤害**：teammate 把你的话当权威，于是跳过自己 skill 的完整流程、照你的残缺版本退化。已观察到的退化 —— 你说「只把严重的报我」→ reviewer 降低 code-review 的 effort 档位；你说「起手调 TDD skill、报 DONE 前调 verification」→ implementer 把「本该写进它给 subagent 的 prompt 的 skill 点名」错当成「自己起手调用」，退化为 inline 自己写代码；你给 reviewer 多余上下文 → 它 inline 探索而不按 code-review 的并行 subagent 流程跑。
+
+表达 scope 意图可以，但用**意图**措辞，别 translate 成操作：
+
+- 意图（可以）：「这个 PR 我最关心 \<module\> 的正确性和边界处理」
+- 操作（不要）：「用 high effort」/「只把严重 bug 报给我」/「起手先 `Skill('superpowers:test-driven-development')`」
+
+**例外 —— 你有权覆盖，但要显式。** 你持有 teammate 没有的全局视野，确实可能因全局原因要 teammate 偏离它 skill 的默认做法（如「这次时间紧，跳过 spec reviewer 只做 code-quality review」）。这是你的权力，合法。但要**明确说这是对 skill 默认做法的覆盖、给出理由**，别把覆盖伪装成「教 skill 怎么用」。显式覆盖是你有意识承担一个 trade-off；随口转述是你以为在复述 skill、实则说错。前者保留，后者杜绝。
+
+发现自己在 spawn prompt 里写某个 skill「该怎么用」却又不是有意覆盖 → 停下：那是 teammate 读它自己 skill 的事。
+
 ## Hub-and-spoke (framework limit)
 
 Teams 是 flat 的 —— 只有 lead 能 spawn / TeamCreate / TeamDelete。最大 dispatch 深度是 lead → teammate → subagent。如果一个 teammate `SendMessage` 你请求另一个 teammate，这是正确行为；自己去 spawn 那个新人。
@@ -92,6 +112,7 @@ Teams 是 flat 的 —— 只有 lead 能 spawn / TeamCreate / TeamDelete。最�
 | 跨多个 message spawn teammate | 变 sequential 不是 parallel | 一个 message，多个 `Agent` 调用 |
 | 忘传 `name` 参数 | socket 断了无法 re-address；in-flight 工作丢失 | 始终传 `name` |
 | 把整个 teammate 协议塞进每个 spawn prompt | prompt 又长又脆；规则版本在不同项目间漂移 | spawn prompt invoke `Skill('agent-team:teammate')`；协议在那里 |
+| 在 spawn prompt 里随口转述 teammate skill 怎么执行（effort 档位 / 何时派 subagent / 起手调哪个 skill） | 残缺转述被 teammate 当权威 → 行为退化 | 传 WHAT 不传 HOW；要覆盖就显式说明 + 给理由，别伪装成教 skill 用法 |
 | 看任务完成了就自作主张 shutdown | 丢 in-flight teammate 状态；用户惊讶 | 向用户汇报，获取明确批准，再 shutdown |
 | 还有 teammate 活着就 `TeamDelete` | 留下 orphan teammate，要 tmux pane 取证 | 从 `config.json` 盘点，先 shutdown 所有人 |
 
@@ -101,6 +122,7 @@ Teams 是 flat 的 —— 只有 lead 能 spawn / TeamCreate / TeamDelete。最�
 - 准备 `TeamDelete` 但 `config.json` 里还列着 member → 停下，先 shutdown 所有人。
 - 准备在多 message 里 spawn 多个 teammate → 停下，合并到一个 message。
 - 准备写一个 teammate prompt 说 "you can also spawn teammates as needed" → 停下，框架不允许。
+- 准备在 spawn prompt 里写某个 skill「该怎么用」/ 指定 effort 档位 /「只报严重的」，而你并非有意显式覆盖 → 停下，那是 HOW，归 teammate 的 skill；你只给 WHAT 和 scope 意图。
 
 ## Related docs and skills
 
