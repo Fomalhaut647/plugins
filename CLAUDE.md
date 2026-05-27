@@ -17,6 +17,10 @@
 
 只改一边而不改另一边会**静默地**让安装失败。任何增删改务必两边同步。本仓库故意不设 `external_plugins/` —— 所有 plugin 都是自家的，统一用本地 `./plugins/<name>` source，不用 git-subdir 或 url source。
 
+## 更新 plugin 必须升版本号
+
+凡改动某个 plugin 的内容（skill、command、reference 等），必须同步把该 plugin 的 `plugins/<name>/.claude-plugin/plugin.json` 里的 `version` 按 semver 升一级 —— 修 bug / 微调升 patch，加功能升 minor，破坏性变更升 major。否则下游用户的 `/plugin` 无从感知有更新。版本号只在 `plugin.json` 里，`marketplace.json` 不带 version，不用同步。
+
 ## 公开 artifact 中的身份
 
 凡是会公开的 author / owner 字段（`marketplace.json` 的 `owner`、`plugin.json` 的 `author`、git commit author、README 署名、任何可能 push 到 GitHub 的内容）必须使用：
