@@ -21,7 +21,7 @@ Then browse via `/plugin > Discover` or install a specific plugin:
 | Name | Status | Description |
 | --- | --- | --- |
 | [`agent-team`](plugins/agent-team) | v0.1.0 | `lead` / `teammate` subskills coordinating long-running multi-agent teams; optional reference docs layer the `superpowers` + `code-review` development workflow on top |
-| [`skill-simplifier`](plugins/skill-simplifier) | v0.1.0 | Audit a SKILL.md or CLAUDE.md for content that duplicates upstream knowledge sources (system prompt, Tool Descriptions, other Skills, other CLAUDE.md files) and remove the duplication |
+| [`skill-simplifier`](plugins/skill-simplifier) | v0.2.0 | Audit a SKILL.md or CLAUDE.md and remove upstream duplication and imagined-error safeguards a fresh-session model would not need |
 
 ## Structure
 

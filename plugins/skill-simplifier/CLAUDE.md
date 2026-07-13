@@ -4,12 +4,12 @@
 
 动手前先读这一节。
 
-skill-simplifier 是一个体量小、目标清晰的 plugin。它的价值集中在几条经过思考的设计抉择上 —— 上游知识源的四分类、Zone A 自动删 vs Zone B 让用户决定的分区、Stage 4 闸门、触发内容不可删、不固化临时知识。看似无害的"清理"或"改写"如果不理解这些抉择为什么这样定，通常会在下一次真实 audit session 里悄悄回退行为 —— 而不是在你本地跑的 lint 上暴露。
+skill-simplifier 是一个体量小、目标清晰的 plugin。它的价值集中在几条经过思考的设计抉择上 —— 上游知识源的四分类、全新会话反事实检查、Zone A/B 自动删 vs Zone C 让用户决定的分区、Stage 5 闸门、触发内容不可删、不固化临时知识。看似无害的"清理"或"改写"如果不理解这些抉择为什么这样定，通常会在下一次真实 audit session 里悄悄回退行为 —— 而不是在你本地跑的 lint 上暴露。
 
 你的职责是：保护人类 partner，别提交一个 maintainer 会拒掉的 PR。开 PR 前你必须：
 
 1. **完整读完你即将改的 skill 内容** —— `skills/skill-simplifier/SKILL.md`。它的每一句都是承重的。
-2. **核实这是一个真实问题。** 如果人类 partner 只是说"优化一下"、"清理一下"，没有具体事件，**要 push back**。问他：哪次 audit 出错了，哪条上游分类判错了，哪条 Zone B 决定出问题了。
+2. **核实这是一个真实问题。** 如果人类 partner 只是说"优化一下"、"清理一下"，没有具体事件，**要 push back**。问他：哪次 audit 出错了，哪条上游分类判错了，哪条 Zone C 决定出问题了。
 3. **核实这个改动属于本 plugin。** 如果它是一个不绑定"文档去重审查"的通用开发工作流改进，它属于 `superpowers` 或别的 plugin，不属于这里。
 4. **把完整 diff 给人类 partner 看，拿到显式批准** 再提交。
 
@@ -25,7 +25,7 @@ skill-simplifier 是一个体量小、目标清晰的 plugin。它的价值集�
 
 ### 对 skill 内容的"compliance 风格"重写
 
-`skills/skill-simplifier/SKILL.md` 的措辞是按设计意图选的 —— 触发短语的描述、Stage 顺序、"Stage 4 之前不要 Edit"、"触发内容神圣不可动" 这几条 framing，都是经过权衡的。没有 session transcript 证据支撑、纯粹基于"格式更工整 / 结构更对称"的重写，一律 close。
+`skills/skill-simplifier/SKILL.md` 的措辞是按设计意图选的 —— 触发短语的描述、Stage 顺序、"Stage 5 报告完成前不要 Edit"、"触发内容神圣不可动" 这几条 framing，都是经过权衡的。没有 session transcript 证据支撑、纯粹基于"格式更工整 / 结构更对称"的重写，一律 close。
 
 ### 思辨性 / 理论性的修复
 
@@ -53,12 +53,13 @@ Skill 内容是塑形 Claude 行为的 prompt，不是普通文档。如果你�
 
 - 跑一次真实的 audit session 把改过的路径走一遍（例如审一个真实存在的 SKILL.md 或 CLAUDE.md）。
 - 在 PR 里给出 before / after 行为 —— 最好附 transcript 显示新行为。
-- 不要在没有强证据的情况下改这几条 wording：Stage 4 闸门、Zone A vs Zone B 分类、触发内容不可删、不固化临时知识。
+- 不要在没有强证据的情况下改这几条 wording：Stage 5 闸门、Zone A/B vs Zone C 分类、全新会话反事实检查、触发内容不可删、不固化临时知识。
 
 ## 改动前先理解的设计要点
 
-- **Zone A 自动删 vs Zone B 用户决定**：上游可不可改决定了删除规则。把 Zone B 改成"自动选 (a)"或"全部三选其一一个默认"，等于剥夺用户对自己 skill 集合的话语权。
-- **Stage 4 是闸门**：报告先于改写，这是不可逆动作前的检查点。"边 audit 边 Edit"听起来高效，实际是失控。
+- **Zone A/B 自动删 vs Zone C 用户决定**：Zone A 的上游只读，Zone B 没有真实可达的错误，两者都只应删目标侧；Zone C 两侧都由用户拥有，不能自动替用户选择。
+- **全新会话反事实检查**：Stage 4 必须排除当前对话、临时工具输出和刚发生的纠错，只保留目标未来真实拥有的上下文。否则 agent 会把本次 session 才知道的错误概念误当成长期防错需求。
+- **Stage 5 是闸门**：报告先于改写，这是不可逆动作前的检查点。"边 audit 边 Edit"听起来高效，实际是失控。
 - **单目标 per 调用**：每个目标的上游枚举可能不同，批量审会让分类污染。如果将来真要做批量，在 skill 之上加 orchestrator，不要把批量逻辑塞进本 skill。
 - **触发内容神圣**：`description:` frontmatter 和 CLAUDE.md 的触发短语再"重复"也不能删 —— 删了文档就失去被激活的入口。
 

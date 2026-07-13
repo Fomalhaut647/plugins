@@ -1,7 +1,7 @@
 {
   "name": "skill-simplifier",
-  "description": "Audit a SKILL.md (with optional references/) or CLAUDE.md and remove content that duplicates upstream knowledge sources — system prompt, Tool Descriptions, other Skills, other CLAUDE.md files.",
-  "version": "0.1.0",
+  "description": "Audit a SKILL.md (with optional references/) or CLAUDE.md and remove upstream duplication and safeguards against imagined errors a fresh-session model would not make.",
+  "version": "0.2.0",
   "author": {
     "name": "Fomalhaut647",
     "email": "fomalhaut@stu.pku.edu.cn"

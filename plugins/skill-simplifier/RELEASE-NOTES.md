@@ -1,5 +1,10 @@
 # skill-simplifier 版本说明
 
+## v0.2.0
+
+- 新增 Stage 4 全新会话反事实检查：排除当前对话污染，识别未污染模型本不会犯的假想防错。
+- 新增自动删除的 Zone B；原用户决定区与内部分层区顺延为 Zone C / Zone D，报告与应用顺延为 Stage 5 / Stage 6。
+
 ## v0.1.0
 
 初版骨架，通过 `fomalhaut647-plugins` marketplace 首次发布。
