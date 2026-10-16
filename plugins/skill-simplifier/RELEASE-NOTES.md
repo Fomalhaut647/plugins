@@ -1,5 +1,9 @@
 # skill-simplifier 版本说明
 
+## v0.2.1
+
+- Stage 1 的 deferred tool 示例去掉 `TeamCreate`：官方已删除这个工具，现在给子 agent 起名就自动组队。
+
 ## v0.2.0
 
 - 新增 Stage 4 全新会话反事实检查：排除当前对话污染，识别未污染模型本不会犯的假想防错。
