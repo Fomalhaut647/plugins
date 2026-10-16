@@ -28,7 +28,7 @@
 - **Name**：`Fomalhaut647`
 - **Email**：`fomalhaut@stu.pku.edu.cn`
 
-绝不能用全局 CLAUDE.md「北大作业 PDF」一节里那个真名 —— 那个身份只用于学术 LaTeX 作业。同样，全局列为 `userEmail` 的 `usafomalhaut@gmail.com` 也不用于本仓库。
+绝不能用其他身份：真名，以及会话上下文里给出的 `userEmail` 等其他邮箱，都不用于本仓库。
 
 ## README 是双语 —— 必须同步
 
