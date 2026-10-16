@@ -41,7 +41,7 @@ Claude 没法 Read 系统提示词，但 Claude 自己就带着它在 context �
 针对目标显式提到、或工作流隐式涉及的每一个 tool，去读它的 description。
 
 - 内置 tool（Read、Edit、Bash、Write、Skill、...）的 description 已经在 context 里。
-- **Deferred tool**（TeamCreate、SendMessage、WebFetch、Monitor、...）只在 `<system-reminder>` 块里以名字出现，schema 没被加载。用 `ToolSearch` 配合 `select:Name1,Name2,...` 把它们的 schema 拉进来。
+- **Deferred tool**（SendMessage、WebFetch、Monitor、...）只在 `<system-reminder>` 块里以名字出现，schema 没被加载。用 `ToolSearch` 配合 `select:Name1,Name2,...` 把它们的 schema 拉进来。
 
 如果目标重述了一条 tool description 已经提供的用法规则，就是在重复 Tool Description。
 
