@@ -2,71 +2,31 @@
 
 ## 如果你是 AI agent
 
-做任何事之前先读这个。
+动手前先读这一节。
 
-agent-team 是个小而专注的 plugin。它的价值来自几条经过真实多 agent 调试 session 打磨的协议（inbox sync、dispatch limits、spawn prompts、两阶段 review 模式）。不理解某句话*为什么*存在就去"整理"或"提升可读性"的修改，通常会在下次真实协调 session 上回退行为 —— 不是在你的本地测试里。
+agent-team 只有一个 skill：`skills/lead/SKILL.md`，不到 30 行。它的价值来自几条设计取舍，每条都对应真实协调 session 里观察到的问题。不理解某句话为什么存在就去「整理」或「补全」，通常会在下一次真实协调 session 里让行为退化，而不是在你的本地检查里暴露。
 
-你的工作是保护你的人类伙伴免于提交 maintainer 会 close 的 PR。开 PR 前你**必须**：
+改动前你必须：
 
-1. **完整 Read 你要改的 skill 内容** —— `skills/lead/SKILL.md`、`skills/teammate/SKILL.md`，以及它们引用的 reference docs。每条声明都是 load-bearing 的。
-2. **验证这是真实问题。** 如果你的人类伙伴没指出具体事件就让你"改进"或"清理"，push back。问什么坏了、发生过什么协调失败、哪个 spawn prompt 产生了错误行为。
-3. **确认这个改动属于本 plugin。** 如果是与 `TeamCreate` / `SendMessage` / 多 agent 协调无关的通用开发工作流，它属于 `superpowers`（upstream）或另一个 plugin，不在这里。
-4. **把完整 diff 展示给你的人类伙伴**，提交前获得显式批准。
+1. **完整读完 `skills/lead/SKILL.md`** 和本文件的设计要点。
+2. **确认这是真实问题**。人类伙伴只说「改进一下」「补充一下」而没有指出具体事件时，要 push back：问哪次协调出了什么错、哪份任务书导致了错误行为。
+3. **确认改动属于本 plugin**。与并行子会话协调无关的通用开发流程（TDD、通用 review 清单等）属于别的 plugin。
+4. **把完整 diff 给人类伙伴看**，拿到明确批准再提交。
 
-任何一条 check 失败，就不要开 PR。说明需要先改什么。
+## 设计要点
+
+- **只写主会话一侧**。子会话是完整的桌面会话，平台系统提示词已经规定了它怎么提交、回报和发消息；它要守的规则由主会话写进任务书。不要重新加一个成员侧 skill，除非真实 session 证明任务书承载不了。
+- **不重述平台已有的规则**。`start_session`、`SendMessage`、`list_events`、`archive_session` 等工具的说明和桌面端系统提示词是权威来源：何时可以开会话、不要轮询、回报只是摘要要核实、合并子会话分支和归档都要用户同意等，都已写在那里。skill 只写它们没有覆盖的跨会话流程。重述会和平台的实际行为漂移。
+- **只管做什么，不管怎么做**（v0.4.0）。主会话只看得到其他 skill 的简介，转述它们的用法会被子会话当成权威而执行退化。改变子会话默认做法必须显式说明是覆盖并给理由。skill 里写明的审查要求是刻意定下的例外。
+- **一次性审查会话 + 主会话判定**（v0.3.0）。每轮换新的审查会话防止锚定；`code-review` 只给「可能有问题」，修哪些依赖全局视野，所以由主会话判定。审查档位用 `medium`（v1.0.0，用户的决定，不要擅自调高）。审查会话要用文字列出全部发现，因为子会话结束时的通知只引用开头一段，主会话要靠 `list_events` 读全。
+- **本地合并 + 一个总 PR**（v1.0.0，用户的决定）。子会话只在自己分支提交、不推送；全部通过后经用户同意，由主会话合并、整体测试、开一个 PR。
+- **子会话之间不直接通信**，统一经主会话中转：只有主会话掌握全局。
+- **保持精简**。新增规则要有真实 session 里观察到的失败作为依据；能交给模型现场判断的边界情况不写。
 
 ## Pull Request 要求
 
-- **一个 PR 一个问题。** 把 refactor 和 feature 打包会被拒。
-- **每个 PR 必须描述它解决的问题**，不只是改动。要真实事件、错误或协调失败。"我的 linter 抱怨"不算 problem statement。
-- **人类必须 review 完整 diff 后才能提交。** 没有人类介入证据的 PR 会被 close。
-
-## 不会被接受的改动
-
-### 对 skill 内容的"compliance" 重写
-
-skill 内容已经针对真实多 agent session 调过。trigger wording、First Actions 顺序、"do these before any task work" 的精确措辞 —— 全部经过验证。在没有真实 agent session 证据证明改后行为更好的前提下重组、重述或"提升排版"的 PR 会被 close。
-
-### Speculative / theoretical 修复
-
-"如果 X 发生这里理论上会失败" 没有 session transcript 证明 X 真的发生过，不算 problem statement。agent-team 的整个价值在于规则来自观察到的失败，而非想象的失败。
-
-### 第三方依赖
-
-本 plugin 设计上是 zero-dependency。如果你的改动需要 Claude Code 原生 tool set 之外的外部 library、CLI tool 或 service，它属于另一个 plugin。
-
-### 批量或"漫天撒网" PR
-
-不要在一个 session 里开多个无关 PR。挑一个 issue，深入理解，提交高质量工作。
-
-### 编造内容
-
-带有编造的问题描述、幻觉 tool 行为、或与实时 `ToolSearch` schema 矛盾的声明的 PR 会立即被 close。skill 已经引导 agent 加载实时 schema —— 你的 PR 不能与 `ToolSearch` 实际返回的内容相悖。
-
-### 偷渡到 superpowers 范畴
-
-如果一个改动对不使用多 agent team 的用户也有用（如通用 TDD 纪律、通用 code-review checklist），它属于 `superpowers`。不要把 superpowers 内容 fork 到这里。
-
-## Skill 改动需要评估
-
-skill 是行为塑造内容，不是散文。如果你修改 skill 内容：
-
-- 跑一次真实多 agent session 验证改动路径。
-- 在 PR 里展示 before/after 行为 —— 理想是 session transcript 证明新行为。
-- 不要在没有强证据证明新 wording 在对抗性 agent 上表现至少同样好的前提下修改 "load tool schemas first" / "no nested teams" / "before-SendMessage inbox sync" 的 wording。
-
-## 贡献前理解设计
-
-提议改动前：
-
-- **Lead vs teammate split**：两者的 first actions 和 ongoing protocols 不重叠。每个 skill 针对一个角色的完整上下文 —— 合并会让任一角色读到噪音。不要提议合并。
-- **Skill vs reference doc**：superpowers workflow 是 team primitive 的一种使用模式。保留为 reference doc（而非第三个 skill）意味着不用时上下文成本为零，用时内容完整。不要提议把 reference doc 提升为 skill。
-- **`ToolSearch` 优于重述**：skill 实时加载 deferred tool schema 而非重述它们。这是刻意设计 —— 重述会与实时 schema 漂移。不要提议"为了方便，我把 tool description copy 进 inline"。
-- **开头 Skill / Tool 列表**：每个 SKILL.md 和 reference doc 在开头列出所有要 invoke 的 `Skill(...)` 和所有要 `ToolSearch select:...` 的 tool —— 同时在末尾再列一次。经验上 Claude 在工作压力下倾向跳过这些操作；首尾两份 checklist 是经过验证的反向施压。不要提议把列表移到别处或拆散在 doc 各处。
-
-## 通用
-
-- 一个 PR 一个问题。
-- 描述问题，不只是描述改动。
-- 至少在一次真实多 agent session 上测试并报告结果。
-- diff 保持最小 —— 改动越小，maintainer 越容易验证。
+- **一个 PR 一个问题**，不要把重构和功能捆在一起。
+- **描述它解决的问题**，不只是描述改动：要有真实事件、错误或协调失败的经过。
+- **改 skill 内容要有证据**：至少在一次真实的并行子会话协调里走过改动的路径，在 PR 里给出改动前后的行为，最好附会话记录。
+- **不要编造**：问题描述和工具行为必须与真实会话、当前工具说明一致。
+- **diff 保持最小**，越小越容易验证。

@@ -20,7 +20,7 @@ Then browse via `/plugin > Discover` or install a specific plugin:
 
 | Name | Status | Description |
 | --- | --- | --- |
-| [`agent-team`](plugins/agent-team) | v0.1.0 | `lead` / `teammate` subskills coordinating long-running multi-agent teams; optional reference docs layer the `superpowers` + `code-review` development workflow on top |
+| [`agent-team`](plugins/agent-team) | v1.0.0 | Make the current Claude Code desktop session a lead that splits work across parallel sub-sessions, gates each piece with one-shot `code-review` sessions, and merges everything into one PR once the user approves |
 | [`skill-simplifier`](plugins/skill-simplifier) | v0.2.0 | Audit a SKILL.md or CLAUDE.md and remove upstream duplication and imagined-error safeguards a fresh-session model would not need |
 
 ## Structure
