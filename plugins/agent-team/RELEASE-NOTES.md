@@ -1,5 +1,25 @@
 # agent-team Release Notes
 
+## v1.0.0
+
+破坏性重写：从 CLI 的 agent teams 改为 Claude Code 桌面端的并行子会话（2026 年 10 月更新：主会话用 `start_session` 开子会话，子会话挂在主会话下、结束时自动回报）。整个 plugin 只剩一个 skill `agent-team:lead`，不到 30 行。
+
+为什么旧版不能沿用：
+
+- 桌面端不支持 agent teams，官方文档写明它只在 CLI 里提供。
+- 官方已去掉 `TeamCreate` / `TeamDelete`：现在给子 agent 起名就自动组队，团队目录随会话自动生成。
+- 旧版核心的收件箱同步协议，前提是「一轮之内收不到新消息」。现在消息会在两次工具调用之间送达，这个前提不成立了。
+
+改动：
+
+- **删除 `agent-team:teammate`** 及其全部 reference doc。子会话是完整的桌面会话，平台已经规定了它怎么提交、回报、发消息；它该守的规则写在主会话派活的任务书里。
+- **删除 superpowers 开发流程层**（brainstorming → writing-plans → TDD implementer → 两阶段 review）和 `docs/` 目录约定。子会话用什么方法论由它自己的 skill 和项目规则决定。
+- **审查默认开启**：每个改了代码的块，由主会话另开一次性审查会话（工作树从该块分支切出），用内置 `code-review`（`medium` 档，v0.3.0 起用的是 `xhigh`）只读审查，用文字列出全部发现。主会话判定哪些值得修、发给做这块的子会话修复，每轮换新的审查会话，直到没有值得修的。发现从会话记录里读，不再发成 PR inline comment。
+- **合并改为本地合并 + 一个总 PR**：子会话只在自己分支提交、不推送；全部通过后向用户汇报，用户同意后主会话把各分支合进自己的分支、整体测试，再开一个 PR。
+- 子会话之间不直接通信，统一经主会话中转。
+
+保留：v0.4.0 的「只管做什么，不管怎么做」边界，以及 v0.3.0 的「一次性审查 + 主会话判定修哪些」。
+
 ## v0.4.0
 
 确立 lead 的「你管 WHAT，不管 HOW」职责边界。根因：lead 的 context 里只有各 teammate / superpowers skill 的 description、没有 body，残缺转述执行细节（code-review effort 档位、何时派 subagent、起手调哪个 skill 等）会被 teammate 当权威而跳过自己 skill 的完整流程、退化执行。

@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "agent-team",
-      "description": "Two subskills for Claude Code agent team coordination — agent-team:lead orchestrates a team, agent-team:teammate guides each worker. Covers inbox sync protocol, no-nested-teams constraint, spawn templates, and the shutdown sequence. Optional reference docs layer the superpowers + code-review development workflow on top.",
+      "description": "Lead parallel sub-sessions in the Claude Code desktop app — agent-team:lead turns the current session into a lead that splits work across sub-sessions, verifies their results, runs one-shot code-review sessions, triages fixes, and merges every branch into one PR once the user approves.",
       "author": {
         "name": "Fomalhaut647",
         "email": "fomalhaut@stu.pku.edu.cn"
