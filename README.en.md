@@ -21,6 +21,7 @@ Then browse via `/plugin > Discover` or install a specific plugin:
 | Name | Status | Description |
 | --- | --- | --- |
 | [`agent-team`](plugins/agent-team) | v1.0.0 | Make the current Claude Code desktop session a lead that splits work across parallel sub-sessions, gates each piece with one-shot `code-review` sessions, and merges everything into one PR once the user approves |
+| [`session-wrap`](plugins/session-wrap) | v0.1.0 | Wrap up a Claude Code desktop session: tidy docs, commit and push, merge a PR, clean up branches and worktrees, archive the session, with optional pre-merge `code-review` |
 | [`skill-simplifier`](plugins/skill-simplifier) | v0.2.1 | Audit a SKILL.md or CLAUDE.md and remove upstream duplication and imagined-error safeguards a fresh-session model would not need |
 
 ## Structure
