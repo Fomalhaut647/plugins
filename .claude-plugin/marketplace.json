@@ -26,6 +26,16 @@
       },
       "category": "productivity",
       "source": "./plugins/skill-simplifier"
+    },
+    {
+      "name": "session-wrap",
+      "description": "Wrap up a Claude Code desktop session — tidy docs with neat-freak, commit and push, open and merge a PR into main, clean up stale branches and worktrees, then archive the session; optionally gate the merge with code-review sub-sessions. Activates only when the user literally says 「调用 session-wrap」.",
+      "author": {
+        "name": "Fomalhaut647",
+        "email": "fomalhaut@stu.pku.edu.cn"
+      },
+      "category": "productivity",
+      "source": "./plugins/session-wrap"
     }
   ]
 }

@@ -1,0 +1,20 @@
+{
+  "name": "session-wrap",
+  "description": "Wrap up a Claude Code desktop session: tidy docs with neat-freak, commit and push, open and merge a PR into main, clean up stale branches and worktrees, then archive the session. Optionally runs code-review sub-sessions before merging. Activates only when the user literally says 「调用 session-wrap」.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Fomalhaut647",
+    "email": "fomalhaut@stu.pku.edu.cn"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/session-wrap",
+  "repository": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/session-wrap",
+  "keywords": [
+    "session-wrap",
+    "wrap-up",
+    "pull-request",
+    "code-review",
+    "claude-code",
+    "desktop"
+  ]
+}

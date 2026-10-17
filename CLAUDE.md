@@ -6,7 +6,7 @@
 
 我个人的 Claude Code plugins marketplace，发布名为 `fomalhaut647-plugins`。`plugins/` 下每个子目录是一个可独立安装的 plugin；`.claude-plugin/marketplace.json` 是对外发布它们的索引。Marketplace 通过 `/plugin marketplace add Fomalhaut647/plugins` 添加，plugin 通过 `/plugin install <name>@fomalhaut647-plugins` 安装。
 
-目前已发布 `agent-team` 与 `skill-simplifier` 两个 plugin。
+目前已发布 `agent-team`、`session-wrap` 与 `skill-simplifier` 三个 plugin。
 
 ## 双源一致性：新增 / 重命名 / 删除 plugin
 
