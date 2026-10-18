@@ -20,7 +20,7 @@
 
 | 名字 | 状态 | 说明 |
 | --- | --- | --- |
-| [`agent-team`](plugins/agent-team) | v1.0.1 | 在 Claude Code 桌面端让当前会话当主会话，把工作拆给并行子会话，经一次性 `code-review` 审查会话把关，用户同意后合并成一个 PR |
+| [`agent-team`](plugins/agent-team) | v1.1.0 | 在 Claude Code 桌面端让当前会话当主会话，把工作拆给并行子会话，经一次性 `code-review` 审查会话把关，用户同意后合并成一个 PR |
 | [`session-wrap`](plugins/session-wrap) | v0.2.0 | 在 Claude Code 桌面端给会话收尾：整理文档、提交推送、开 PR 等 CI 后合并、清理分支和工作树、归档会话，可选合并前 `code-review` 审查 |
 | [`skill-simplifier`](plugins/skill-simplifier) | v0.2.1 | 审查 SKILL.md / CLAUDE.md，删除上游重复和全新会话模型本不会犯的假想防错 |
 

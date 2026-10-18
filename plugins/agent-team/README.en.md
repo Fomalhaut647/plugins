@@ -35,7 +35,9 @@ Ask for it in plain words, such as "set up a team and split this across parallel
 2. **Dispatches** one sub-session per piece, each in its own worktree. The brief says what to do, not how: goal, scope, acceptance criteria, boundaries. Sub-sessions commit only on their own branch and take questions to the lead only.
 3. **Verifies** each result by reading the full report the sub-session sends and the changes on its branch.
 4. **Reviews** every piece that changed code with a one-shot review session running the built-in `code-review` read-only. The lead decides which findings are worth fixing and sends them back to the original sub-session, with a fresh review session each round until nothing is worth fixing.
-5. **Merges**: after reporting to you and getting your approval, it merges every branch into the lead's branch, tests the whole, and opens one PR; finally it asks whether to archive the sub-sessions.
+5. **Merges**: after reporting to you and getting your approval, it merges every branch into the lead's branch, tests the whole, and opens one PR.
+
+Each time the lead wakes up, it also archives the sub-sessions it no longer needs: review sessions whose findings it has read, research sessions whose conclusions it has passed on to you, and development sessions whose branch it has merged.
 
 ## Design choices
 
@@ -44,6 +46,7 @@ Ask for it in plain words, such as "set up a team and split this across parallel
 - **One-shot review sessions**: a fresh session each round avoids anchoring on the previous round's conclusions; the lead, holding the global view, decides what gets fixed.
 - **Local merge + one PR**: sub-sessions never push, which keeps the remote quiet; the pieces come together in the lead's branch and are tested as a whole before review.
 - **Full report by message, one line at the end**: a message from a sub-session wakes the lead right away with the full content, instead of waiting until every sub-session has stopped; its own last reply is a single sentence, so the same report does not take up the lead's context twice.
+- **Automatic archiving**: one-shot review and research sessions pile up and crowd the sidebar; archiving only removes the worktree, and the branch and its commits stay.
 
 ## Directory layout
 
