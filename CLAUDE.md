@@ -8,6 +8,10 @@
 
 目前已发布 `agent-team`、`session-wrap` 与 `skill-simplifier` 三个 plugin。
 
+## 直接推送 main
+
+本仓库不是需要多人协作并行开发的大型仓库，每次改动直接提交并推送进 main 即可，不开新分支，也不开 PR。
+
 ## 双源一致性：新增 / 重命名 / 删除 plugin
 
 一个 plugin 只有在以下两处同时存在且一致时才是"真实"的：
