@@ -2,7 +2,7 @@
 
 > [English version](README.en.md)
 
-一个 Claude Code 桌面端 plugin，只含一个 skill，用于给会话收尾：用 neat-freak 整理文档，提交并推送，功能分支开 PR 合并进 main（在 main 上就直接推送），清理废弃的分支和工作树，最后归档本会话。用户要求时，合并前先开子会话用 `code-review` 审查。
+一个 Claude Code 桌面端 plugin，只含一个 skill，用于给会话收尾：用 neat-freak 整理文档，提交并推送，功能分支开 PR、在本轮里等 CI 通过（失败就自己修）后合并进 main（在 main 上就直接推送），清理废弃的分支和工作树，最后归档本会话。用户要求时，合并前先开子会话用 `code-review` 审查。
 
 ## 安装
 
@@ -15,7 +15,7 @@
 
 - Claude Code 桌面端：开子会话、读子会话结果和归档会话都依赖桌面端的会话工具。
 - 已装 `neat-freak` skill，第 1 步用它整理文档。
-- 已装 GitHub CLI `gh`，用于开 PR 和合并。
+- 已装 GitHub CLI `gh`，用于开 PR、等 CI 和合并。
 
 ## 用法
 

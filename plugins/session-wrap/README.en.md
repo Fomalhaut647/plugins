@@ -2,7 +2,7 @@
 
 > [中文版](README.md)
 
-A Claude Code desktop plugin with a single skill that wraps up a session: tidy docs with neat-freak, commit and push, open a PR and merge it into main from a feature branch (or push directly when on main), clean up stale branches and worktrees, then archive the session. On request, it first runs `code-review` in a sub-session before merging.
+A Claude Code desktop plugin with a single skill that wraps up a session: tidy docs with neat-freak, commit and push, open a PR from a feature branch, wait for CI within the same turn (fixing failures itself), and merge it into main (or push directly when on main), clean up stale branches and worktrees, then archive the session. On request, it first runs `code-review` in a sub-session before merging.
 
 ## Installation
 
@@ -15,7 +15,7 @@ A Claude Code desktop plugin with a single skill that wraps up a session: tidy d
 
 - The Claude Code desktop app: starting sub-sessions, reading their results, and archiving rely on its session tools.
 - The `neat-freak` skill, used in step 1 to tidy docs.
-- The GitHub CLI `gh`, used to open and merge the PR.
+- The GitHub CLI `gh`, used to open the PR, wait for CI, and merge.
 
 ## Usage
 
