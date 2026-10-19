@@ -14,7 +14,7 @@
 ## 前置条件
 
 - Claude Code 桌面端：开子会话、读子会话结果和归档会话都依赖桌面端的会话工具。
-- 已装 `neat-freak` skill，第 1 步用它整理文档。
+- 已装 `neat-freak` skill，第 1 步用它整理文档。可从本 marketplace 安装：`/plugin install neat-freak@fomalhaut647-plugins`。
 - 已装 GitHub CLI `gh`，用于开 PR、等 CI 和合并。
 
 ## 用法

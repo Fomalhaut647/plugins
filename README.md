@@ -29,7 +29,8 @@
 | 名字 | 状态 | 说明 |
 | --- | --- | --- |
 | [`agent-team`](plugins/agent-team) | v1.1.1 | 在 Claude Code 桌面端让当前会话当主会话，把工作拆给并行子会话，经一次性 `code-review` 审查会话把关，用户同意后合并成一个 PR |
-| [`session-wrap`](plugins/session-wrap) | v0.2.0 | 在 Claude Code 桌面端给会话收尾：整理文档、提交推送、开 PR 等 CI 后合并、清理分支和工作树、归档会话，可选合并前 `code-review` 审查 |
+| [`neat-freak`](plugins/neat-freak) | v3.0.0 | 会话结束后把项目文档、CLAUDE.md、Agent 记忆跟代码对齐，并审计规则执行情况；搬运自[数字生命卡兹克的 khazix-skills](https://github.com/KKKKhazix/khazix-skills) |
+| [`session-wrap`](plugins/session-wrap) | v0.2.1 | 在 Claude Code 桌面端给会话收尾：整理文档、提交推送、开 PR 等 CI 后合并、清理分支和工作树、归档会话，可选合并前 `code-review` 审查 |
 | [`skill-simplifier`](plugins/skill-simplifier) | v0.2.1 | 审查 SKILL.md / CLAUDE.md，删除上游重复和全新会话模型本不会犯的假想防错 |
 
 ## 目录结构
@@ -39,7 +40,7 @@
 ├── .claude-plugin/
 │   └── marketplace.json    # marketplace 索引
 ├── docs/images/            # README 用到的截图
-├── LICENSE                 # 适用于本 marketplace 及所有 plugin
+├── LICENSE                 # 适用于本 marketplace 及自家 plugin
 └── plugins/
     └── <plugin-name>/
         ├── .claude-plugin/plugin.json
@@ -54,4 +55,4 @@
 
 ## 许可证
 
-[MIT](LICENSE) —— 适用于本 marketplace 及所有 plugin。
+[MIT](LICENSE) —— 适用于本 marketplace 及所有自家 plugin。`neat-freak` 是第三方作品，沿用其原作者的 MIT 许可证，见 [plugins/neat-freak/LICENSE](plugins/neat-freak/LICENSE)。

@@ -1,5 +1,9 @@
 # session-wrap 版本说明
 
+## v0.2.1
+
+- README 的前置条件注明 `neat-freak` 可从本 marketplace 安装。
+
 ## v0.2.0
 
 - 开 PR 后在本轮里用 `gh pr checks --watch` 等 CI 跑完，不再结束本轮去报告「在等 CI」：通过就直接合并并继续收尾，失败就自己修好再推。

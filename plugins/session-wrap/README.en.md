@@ -14,7 +14,7 @@ A Claude Code desktop plugin with a single skill that wraps up a session: tidy d
 ## Prerequisites
 
 - The Claude Code desktop app: starting sub-sessions, reading their results, and archiving rely on its session tools.
-- The `neat-freak` skill, used in step 1 to tidy docs.
+- The `neat-freak` skill, used in step 1 to tidy docs. Install it from this marketplace with `/plugin install neat-freak@fomalhaut647-plugins`.
 - The GitHub CLI `gh`, used to open the PR, wait for CI, and merge.
 
 ## Usage

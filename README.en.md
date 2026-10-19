@@ -29,7 +29,8 @@ Then browse via `/plugin > Discover` or install a specific plugin:
 | Name | Status | Description |
 | --- | --- | --- |
 | [`agent-team`](plugins/agent-team) | v1.1.1 | Make the current Claude Code desktop session a lead that splits work across parallel sub-sessions, gates each piece with one-shot `code-review` sessions, and merges everything into one PR once the user approves |
-| [`session-wrap`](plugins/session-wrap) | v0.2.0 | Wrap up a Claude Code desktop session: tidy docs, commit and push, merge a PR once CI passes, clean up branches and worktrees, archive the session, with optional pre-merge `code-review` |
+| [`neat-freak`](plugins/neat-freak) | v3.0.0 | After a session, reconcile project docs, CLAUDE.md, and agent memory with the code, and audit whether rules are followed; packaged from [数字生命卡兹克's khazix-skills](https://github.com/KKKKhazix/khazix-skills) |
+| [`session-wrap`](plugins/session-wrap) | v0.2.1 | Wrap up a Claude Code desktop session: tidy docs, commit and push, merge a PR once CI passes, clean up branches and worktrees, archive the session, with optional pre-merge `code-review` |
 | [`skill-simplifier`](plugins/skill-simplifier) | v0.2.1 | Audit a SKILL.md or CLAUDE.md and remove upstream duplication and imagined-error safeguards a fresh-session model would not need |
 
 ## Structure
@@ -39,7 +40,7 @@ Then browse via `/plugin > Discover` or install a specific plugin:
 ├── .claude-plugin/
 │   └── marketplace.json    # marketplace index
 ├── docs/images/            # screenshots used by the README
-├── LICENSE                 # applies to this marketplace and every plugin
+├── LICENSE                 # applies to the marketplace and in-house plugins
 └── plugins/
     └── <plugin-name>/
         ├── .claude-plugin/plugin.json
@@ -54,4 +55,4 @@ A plugin may also optionally include `.mcp.json` and similar add-ons. See the [o
 
 ## License
 
-[MIT](LICENSE) — applies to this marketplace and every plugin.
+[MIT](LICENSE) — applies to this marketplace and every in-house plugin. `neat-freak` is third-party work under its original author's MIT license; see [plugins/neat-freak/LICENSE](plugins/neat-freak/LICENSE).
