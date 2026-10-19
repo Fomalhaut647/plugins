@@ -4,7 +4,15 @@
 
 Personal Claude Code plugins marketplace.
 
-## Add the marketplace
+## Install
+
+### In the Claude desktop app
+
+Open Settings → Plugins, click **Add** in the top right, choose to add a marketplace, enter `Fomalhaut647/plugins` (or the full URL `https://github.com/Fomalhaut647/plugins`), and click **Sync**. Once synced, this repo's plugins show up in your plugin list, ready to enable one by one.
+
+![Adding this marketplace in the Claude desktop app (Chinese UI)](docs/images/desktop-add-marketplace.webp)
+
+### In the Claude Code CLI
 
 ```
 /plugin marketplace add Fomalhaut647/plugins
@@ -30,6 +38,7 @@ Then browse via `/plugin > Discover` or install a specific plugin:
 .
 ├── .claude-plugin/
 │   └── marketplace.json    # marketplace index
+├── docs/images/            # screenshots used by the README
 ├── LICENSE                 # applies to this marketplace and every plugin
 └── plugins/
     └── <plugin-name>/

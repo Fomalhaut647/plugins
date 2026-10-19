@@ -4,7 +4,15 @@
 
 我个人的 Claude Code plugins marketplace。
 
-## 添加 marketplace
+## 安装
+
+### 在 Claude 桌面端
+
+打开「设置 → 插件」，点右上角「添加」，选择添加市场，填入 `Fomalhaut647/plugins`（或完整 URL `https://github.com/Fomalhaut647/plugins`），点「同步」。同步完成后，本仓库的 plugin 会出现在插件列表里，逐个启用即可。
+
+![在 Claude 桌面端添加本 marketplace](docs/images/desktop-add-marketplace.webp)
+
+### 在 Claude Code CLI
 
 ```
 /plugin marketplace add Fomalhaut647/plugins
@@ -30,6 +38,7 @@
 .
 ├── .claude-plugin/
 │   └── marketplace.json    # marketplace 索引
+├── docs/images/            # README 用到的截图
 ├── LICENSE                 # 适用于本 marketplace 及所有 plugin
 └── plugins/
     └── <plugin-name>/
