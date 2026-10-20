@@ -32,9 +32,9 @@ For local development without a remote, replace the GitHub path with an absolute
 Ask for it in plain words, such as "set up a team and split this across parallel sessions", or invoke `/agent-team:lead`. The lead then:
 
 1. **Splits** the work into independent pieces that touch different files. A piece that depends on another waits until that one passes review, then starts from its branch.
-2. **Dispatches** one sub-session per piece, each in its own worktree. The brief says what to do, not how: goal, scope, acceptance criteria, boundaries. Sub-sessions commit only on their own branch and take questions to the lead only.
+2. **Dispatches** one sub-session per piece, each in its own worktree, at medium effort by default. The brief says what to do, not how: goal, scope, acceptance criteria, boundaries. Sub-sessions commit only on their own branch and take questions to the lead only.
 3. **Verifies** each result by reading the full report the sub-session sends and the changes on its branch.
-4. **Reviews** every piece that changed code with a one-shot review session running the built-in `code-review` read-only. The lead decides which findings are worth fixing and sends them back to the original sub-session, with a fresh review session each round until nothing is worth fixing.
+4. **Reviews** every piece that changed code with a one-shot review session running the built-in `code-review` read-only. The lead decides which findings are worth fixing and sends them back to the original sub-session, with a fresh review session each round until nothing is worth fixing. If you say you won't be around to act (say, you're going to bed), the lead starts a batch of review sessions in advance to stand by.
 5. **Merges**: after reporting to you and getting your approval, it merges every branch into the lead's branch, tests the whole, and opens one PR.
 
 Each time the lead wakes up, it also archives the sub-sessions it no longer needs: review sessions whose findings it has read, research sessions whose conclusions it has passed on to you, and development sessions whose branch it has merged.
