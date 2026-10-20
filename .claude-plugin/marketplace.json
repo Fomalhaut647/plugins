@@ -29,7 +29,7 @@
     },
     {
       "name": "session-wrap",
-      "description": "Wrap up a Claude Code desktop session — tidy docs with neat-freak, commit and push, open a PR, wait for CI (fixing failures), and merge it into main, clean up stale branches and worktrees, then archive the session; optionally gate the merge with code-review sub-sessions. Activates only when the user literally says 「调用 session-wrap」.",
+      "description": "Wrap up a Claude Code desktop session — tidy docs with neat-freak, commit and push, open a PR, wait for CI (fixing failures), and merge it into main, clean up stale branches and worktrees, then archive the session; optionally gate the merge with code-review sub-sessions. Activates only when the user's message contains the exact word session-wrap (hyphenation and case don't matter).",
       "author": {
         "name": "Fomalhaut647",
         "email": "fomalhaut@stu.pku.edu.cn"

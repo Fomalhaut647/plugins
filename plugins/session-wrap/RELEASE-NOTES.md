@@ -1,5 +1,9 @@
 # session-wrap 版本说明
 
+## v0.2.2
+
+- 启用条件放宽：原话里出现 session-wrap 这个词即可（连字符、大小写不算不同），不再必须说「调用」。
+
 ## v0.2.1
 
 - README 的前置条件注明 `neat-freak` 可从本 marketplace 安装。

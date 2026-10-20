@@ -19,7 +19,7 @@ A Claude Code desktop plugin with a single skill that wraps up a session: tidy d
 
 ## Usage
 
-The skill activates only when the user's message literally contains 「调用 session-wrap」; looser phrasing such as "wrap up" or "merge it" does not trigger it. Optional arguments:
+The skill activates only when the user's message contains the exact word session-wrap (hyphenation and case don't matter); looser phrasing such as "wrap up" or "merge it" does not trigger it. Optional arguments:
 
 | Phrase | Effect |
 |---|---|
