@@ -2,7 +2,7 @@
 
 > [中文版](README.md)
 
-A Claude Code desktop plugin with a single skill that wraps up a session: tidy docs with neat-freak, commit and push, open a PR from a feature branch, wait for CI within the same turn (fixing failures itself), and merge it into main (or push directly when on main), clean up stale branches and worktrees, then archive the session. On request, it first runs `code-review` in a sub-session before merging.
+A Claude Code desktop plugin with a single skill that wraps up a session: tidy docs with neat-freak, commit and push, open a PR from a feature branch, wait for CI within the same turn (fixing failures itself), and merge it into main (or push directly when on main), close the issues the session fixed, clean up stale branches and worktrees, then archive the session. On request, it first runs `code-review` in a sub-session before merging.
 
 ## Installation
 
@@ -15,7 +15,7 @@ A Claude Code desktop plugin with a single skill that wraps up a session: tidy d
 
 - The Claude Code desktop app: starting sub-sessions, reading their results, and archiving rely on its session tools.
 - The `neat-freak` skill, used in step 1 to tidy docs. Install it from this marketplace with `/plugin install neat-freak@fomalhaut647-plugins`.
-- The GitHub CLI `gh`, used to open the PR, wait for CI, and merge.
+- The GitHub CLI `gh`, used to open the PR, wait for CI, merge, and close issues.
 
 ## Usage
 
@@ -23,7 +23,7 @@ The skill activates only when the user's message contains the exact word session
 
 | Phrase | Effect |
 |---|---|
-| 调用 session-wrap | Tidy, commit, merge, clean up, archive |
+| 调用 session-wrap | Tidy, commit, merge, close issues, clean up, archive |
 | 调用 session-wrap，合并前 review | Review in one sub-session before merging; fix only major bugs |
 | 调用 session-wrap，多轮 review | Re-review in a fresh sub-session after each fix until a round finds no major bug |
 
