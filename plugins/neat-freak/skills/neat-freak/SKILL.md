@@ -14,6 +14,7 @@ description: >-
   prose (JSON, 周报, changelog announcements), or a bare "整理" with no
   project-knowledge context.
 compatibility: Requires filesystem read access. Writes and destructive actions follow the active agent, workspace, and user authorization rules. Git and rg improve verification; scripts/audit-inventory.sh needs Bash — without it, do the equivalent checks manually. Works on any Agent Skills platform.
+disable-model-invocation: true
 metadata:
   version: "3.0.0"
   category: knowledge-governance

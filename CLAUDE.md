@@ -6,7 +6,7 @@
 
 我个人的 Claude Code plugins marketplace，发布名为 `fomalhaut647-plugins`。`plugins/` 下每个子目录是一个可独立安装的 plugin；`.claude-plugin/marketplace.json` 是对外发布它们的索引。Marketplace 通过 `/plugin marketplace add Fomalhaut647/plugins` 添加，plugin 通过 `/plugin install <name>@fomalhaut647-plugins` 安装。
 
-目前已发布 `agent-team`、`neat-freak`、`session-wrap` 与 `skill-simplifier` 四个 plugin。其中 `neat-freak` 是从第三方仓库 khazix-skills（MIT）原样搬运的，维护规则见 `plugins/neat-freak/CLAUDE.md`。
+目前已发布 `agent-team`、`neat-freak`、`session-wrap` 与 `skill-simplifier` 四个 plugin。其中 `neat-freak` 是从第三方仓库 khazix-skills（MIT）搬运的，只加了一行本地开关，维护规则见 `plugins/neat-freak/CLAUDE.md`。
 
 ## 直接推送 main
 

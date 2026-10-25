@@ -1,7 +1,7 @@
 {
   "name": "neat-freak",
   "description": "End-of-session knowledge cleanup: reconcile project docs, rule files (CLAUDE.md/AGENTS.md), agent memory, and workspace residue with what the code actually does, and audit whether workspace rules are followed. Packaged from 数字生命卡兹克's khazix-skills (MIT).",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": {
     "name": "Fomalhaut647",
     "email": "fomalhaut@stu.pku.edu.cn"
