@@ -1,7 +1,7 @@
 {
   "name": "session-wrap",
-  "description": "Wrap up a Claude Code desktop session: tidy the docs the session touched, collect sub-sessions' changes, commit and push, open a PR, wait for CI (fixing failures), and merge it into main, close the issues the session fixed, then archive the session. Optionally runs code-review sub-sessions before merging. Activates only when the user's message contains the exact word session-wrap (hyphenation and case don't matter).",
-  "version": "0.4.0",
+  "description": "Wrap up a Claude Code desktop session: tidy the docs the session touched, collect sub-sessions' changes, commit and push, open a PR, wait for CI (fixing failures), and merge it into main, close the issues the session fixed, then archive the session. Activates only when the user's message contains the exact word session-wrap (hyphenation and case don't matter).",
+  "version": "0.5.0",
   "author": {
     "name": "Fomalhaut647",
     "email": "fomalhaut@stu.pku.edu.cn"
@@ -13,7 +13,6 @@
     "session-wrap",
     "wrap-up",
     "pull-request",
-    "code-review",
     "claude-code",
     "desktop"
   ]

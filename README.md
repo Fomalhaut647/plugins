@@ -30,8 +30,8 @@
 | --- | --- | --- |
 | [`agent-team`](plugins/agent-team) | v1.5.0 | 在 Claude Code 桌面端让当前会话当主会话，把工作拆给并行子会话，经一次性 `code-review` 审查会话把关，用户同意后合并成一个 PR |
 | [`neat-freak`](plugins/neat-freak) | v3.0.1 | 会话结束后把项目文档、CLAUDE.md、Agent 记忆跟代码对齐，并审计规则执行情况；搬运自[数字生命卡兹克的 khazix-skills](https://github.com/KKKKhazix/khazix-skills) |
-| [`session-wrap`](plugins/session-wrap) | v0.4.0 | 在 Claude Code 桌面端给会话收尾：整理文档、收齐子会话的改动后提交推送、开 PR 等 CI 后合并、关闭修复的 issue、归档会话，可选合并前 `code-review` 审查 |
-| [`skill-simplifier`](plugins/skill-simplifier) | v0.2.1 | 审查 SKILL.md / CLAUDE.md，删除上游重复和全新会话模型本不会犯的假想防错 |
+| [`session-wrap`](plugins/session-wrap) | v0.5.0 | 在 Claude Code 桌面端给会话收尾：整理文档、收齐子会话的改动后提交推送、开 PR 等 CI 后合并、关闭修复的 issue、归档会话 |
+| [`skill-simplifier`](plugins/skill-simplifier) | v0.3.0 | 审查 SKILL.md / CLAUDE.md，删除上游重复和全新会话模型本不会犯的假想防错 |
 
 ## 目录结构
 
