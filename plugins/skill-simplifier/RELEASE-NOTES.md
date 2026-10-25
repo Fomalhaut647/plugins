@@ -1,5 +1,9 @@
 # skill-simplifier 版本说明
 
+## v0.3.0
+
+- 只能手动调用：加上 `disable-model-invocation: true`，只在用户输入 `/skill-simplifier:skill-simplifier` 时启用，模型不会自己调用，简介也不再占每个会话的上下文。
+
 ## v0.2.1
 
 - Stage 1 的 deferred tool 示例去掉 `TeamCreate`：官方已删除这个工具，现在给子 agent 起名就自动组队。

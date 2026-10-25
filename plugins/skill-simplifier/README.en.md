@@ -28,7 +28,7 @@ For local development without a remote, replace the GitHub path with an absolute
 
 | Skill | Activated by | What it does |
 |---|---|---|
-| `skill-simplifier` | The user, when about to write / edit / review a SKILL.md or a CLAUDE.md | Enumerates upstream knowledge sources, checks imagined-error safeguards against a fresh-session counterfactual, auto-deletes Zones A/B, and asks the user to decide Zone C (and Zone D when present) |
+| `skill-simplifier` | The user only, by invoking `/skill-simplifier:skill-simplifier`, when about to write / edit / review a SKILL.md or a CLAUDE.md | Enumerates upstream knowledge sources, checks imagined-error safeguards against a fresh-session counterfactual, auto-deletes Zones A/B, and asks the user to decide Zone C (and Zone D when present) |
 
 The skill loads deferred tool schemas via `ToolSearch` rather than restating them.
 

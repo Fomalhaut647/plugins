@@ -1,6 +1,7 @@
 ---
 name: skill-simplifier
 description: 在即将编写、修改或审查一个 Skill（SKILL.md + references/）或一份 CLAUDE.md 文件时触发，用于审查其中与上游知识源（系统提示词、Tool Description、其他 Skill、其他 CLAUDE.md）重复的内容，以及模型在未污染会话中本不会犯的假想防错。触发短语包括 "simplify this skill"、"review this CLAUDE.md"、"is there duplication in..."、"make this leaner"、"审查 / 精简 / 去重 / 瘦身 skill / CLAUDE.md"，或任何用户刚写完、改完一个 skill / CLAUDE.md 的场景。即使用户没有明说 "simplify"，只要他在批评自己的 skill 或 CLAUDE.md 体量、内容重叠或多余防错，就应该优先调用本 skill —— 这正是它存在的意义。
+disable-model-invocation: true
 ---
 
 # Skill Simplifier

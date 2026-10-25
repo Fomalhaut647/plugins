@@ -28,7 +28,7 @@ Claude 写 SKILL.md 和 CLAUDE.md 时倾向于把它认为重要的事一股脑�
 
 | Skill | 触发者 | 做什么 |
 |---|---|---|
-| `skill-simplifier` | 用户，在即将编写 / 修改 / 审查 SKILL.md 或 CLAUDE.md 时 | 枚举四类上游知识源，用全新会话反事实检查假想防错，自动删除 Zone A/B，让用户决定 Zone C（以及出现时的 Zone D）|
+| `skill-simplifier` | 只能由用户手动调用（`/skill-simplifier:skill-simplifier`），在即将编写 / 修改 / 审查 SKILL.md 或 CLAUDE.md 时 | 枚举四类上游知识源，用全新会话反事实检查假想防错，自动删除 Zone A/B，让用户决定 Zone C（以及出现时的 Zone D）|
 
 本 skill 通过 `ToolSearch` 加载 deferred tool 的 schema，不在 SKILL.md 里重述 tool 内容。
 
