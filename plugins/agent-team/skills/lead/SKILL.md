@@ -1,6 +1,7 @@
 ---
 name: lead
-description: 在 Claude Code 桌面端，用户要把一件较大的工作拆给多个并行子会话分头完成、由当前会话当主会话协调时使用：拆分、派活、核实、审查、判定修复、合并。触发短语包括「开个团队」「组个 agent team」「拆成几个会话并行做」「让几个会话分头做」「你当 lead 协调」、"agent team"、"parallel sessions"、"split this across sessions"。依赖桌面端的子会话工具（start_session 等），CLI 里不可用。
+description: 在 Claude Code 桌面端，把一件较大的工作拆给多个并行子会话分头完成、由当前会话当主会话协调：拆分、派活、核实、审查、判定修复、合并。只能由用户手动调用。依赖桌面端的子会话工具（start_session 等），CLI 里不可用。
+disable-model-invocation: true
 ---
 
 # 并行会话团队：主会话

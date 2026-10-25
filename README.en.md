@@ -28,7 +28,7 @@ Then browse via `/plugin > Discover` or install a specific plugin:
 
 | Name | Status | Description |
 | --- | --- | --- |
-| [`agent-team`](plugins/agent-team) | v1.4.0 | Make the current Claude Code desktop session a lead that splits work across parallel sub-sessions, gates each piece with one-shot `code-review` sessions, and merges everything into one PR once the user approves |
+| [`agent-team`](plugins/agent-team) | v1.5.0 | Make the current Claude Code desktop session a lead that splits work across parallel sub-sessions, gates each piece with one-shot `code-review` sessions, and merges everything into one PR once the user approves |
 | [`neat-freak`](plugins/neat-freak) | v3.0.1 | After a session, reconcile project docs, CLAUDE.md, and agent memory with the code, and audit whether rules are followed; packaged from [数字生命卡兹克's khazix-skills](https://github.com/KKKKhazix/khazix-skills) |
 | [`session-wrap`](plugins/session-wrap) | v0.4.0 | Wrap up a Claude Code desktop session: tidy docs, collect sub-sessions' changes, commit and push, merge a PR once CI passes, close fixed issues, archive the session, with optional pre-merge `code-review` |
 | [`skill-simplifier`](plugins/skill-simplifier) | v0.2.1 | Audit a SKILL.md or CLAUDE.md and remove upstream duplication and imagined-error safeguards a fresh-session model would not need |

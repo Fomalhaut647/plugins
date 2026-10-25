@@ -29,7 +29,7 @@ For local development without a remote, replace the GitHub path with an absolute
 
 ## Usage
 
-Ask for it in plain words, such as "set up a team and split this across parallel sessions", or invoke `/agent-team:lead`. The lead then:
+Invoke `/agent-team:lead` (manual invocation only; phrases like "set up a team" do not trigger it). The lead then:
 
 1. **Splits** the work into independent pieces that touch different files. A piece that depends on another waits until that one passes review, then starts from its branch. If later pieces were started early, the earlier piece's fixes during review are not relayed to them one by one; they get one message to merge it once it passes.
 2. **Dispatches** one sub-session per piece, each in its own worktree, at high effort by default. The brief says what to do, not how: goal, scope, acceptance criteria, boundaries. Sub-sessions commit only on their own branch and take questions to the lead only.
