@@ -1,0 +1,16 @@
+{
+  "description": "Block Bash commands that find processes by name or command-line text and kill them (pkill, killall, xargs kill, kill $(pgrep …))",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/kill_guard.py\""
+          }
+        ]
+      }
+    ]
+  }
+}

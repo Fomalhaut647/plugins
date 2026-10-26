@@ -1,0 +1,17 @@
+{
+  "name": "kill-guard",
+  "description": "Block Bash commands that find processes by name or command-line text and kill them (pkill, killall, xargs kill, kill $(pgrep …)), and tell Claude to stop processes by PID instead.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Fomalhaut647",
+    "email": "fomalhaut@stu.pku.edu.cn"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/kill-guard",
+  "repository": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/kill-guard",
+  "keywords": [
+    "kill-guard",
+    "hooks",
+    "claude-code"
+  ]
+}

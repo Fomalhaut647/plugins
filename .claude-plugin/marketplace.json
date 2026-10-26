@@ -46,6 +46,16 @@
       },
       "category": "productivity",
       "source": "./plugins/neat-freak"
+    },
+    {
+      "name": "kill-guard",
+      "description": "Block Bash commands that find processes by name or command-line text and kill them (pkill, killall, xargs kill, kill $(pgrep …)), and tell Claude to stop processes by PID instead.",
+      "author": {
+        "name": "Fomalhaut647",
+        "email": "fomalhaut@stu.pku.edu.cn"
+      },
+      "category": "security",
+      "source": "./plugins/kill-guard"
     }
   ]
 }

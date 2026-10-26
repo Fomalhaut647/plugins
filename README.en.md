@@ -29,6 +29,7 @@ Then browse via `/plugin > Discover` or install a specific plugin:
 | Name | Status | Description |
 | --- | --- | --- |
 | [`agent-team`](plugins/agent-team) | v1.6.0 | Make the current Claude Code desktop session a lead that splits work across parallel sub-sessions, gates each piece with one-shot `code-review` sessions, and merges everything into one PR |
+| [`kill-guard`](plugins/kill-guard) | v0.1.0 | Block commands that find processes by name or command-line text and kill them (`pkill`, `killall`, `xargs kill`, `kill $(pgrep …)`), so Claude stops processes by PID instead |
 | [`neat-freak`](plugins/neat-freak) | v3.0.1 | After a session, reconcile project docs, CLAUDE.md, and agent memory with the code, and audit whether rules are followed; packaged from [数字生命卡兹克's khazix-skills](https://github.com/KKKKhazix/khazix-skills) |
 | [`session-wrap`](plugins/session-wrap) | v0.5.0 | Wrap up a Claude Code desktop session: tidy docs, collect sub-sessions' changes, commit and push, merge a PR once CI passes, close fixed issues, archive the session |
 | [`skill-simplifier`](plugins/skill-simplifier) | v0.3.0 | Audit a SKILL.md or CLAUDE.md and remove upstream duplication and imagined-error safeguards a fresh-session model would not need |
