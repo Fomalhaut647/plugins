@@ -1,0 +1,19 @@
+{
+  "name": "typescript-lsp",
+  "description": "TypeScript/JavaScript language server for code intelligence. Packaged from Anthropic's claude-plugins-official (Apache-2.0).",
+  "version": "1.0.0",
+  "author": {
+    "name": "Fomalhaut647",
+    "email": "fomalhaut@stu.pku.edu.cn"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/typescript-lsp",
+  "repository": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/typescript-lsp",
+  "keywords": [
+    "typescript-lsp",
+    "lsp",
+    "typescript",
+    "javascript",
+    "claude-code"
+  ]
+}

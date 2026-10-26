@@ -1,0 +1,19 @@
+{
+  "name": "pyright-lsp",
+  "description": "Python language server (Pyright) for type checking and code intelligence. Packaged from Anthropic's claude-plugins-official (Apache-2.0).",
+  "version": "1.0.0",
+  "author": {
+    "name": "Fomalhaut647",
+    "email": "fomalhaut@stu.pku.edu.cn"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/pyright-lsp",
+  "repository": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/pyright-lsp",
+  "keywords": [
+    "pyright-lsp",
+    "lsp",
+    "python",
+    "pyright",
+    "claude-code"
+  ]
+}

@@ -56,6 +56,26 @@
       },
       "category": "security",
       "source": "./plugins/kill-guard"
+    },
+    {
+      "name": "pyright-lsp",
+      "description": "Python language server (Pyright) for type checking and code intelligence. Packaged from Anthropic's claude-plugins-official (Apache-2.0).",
+      "author": {
+        "name": "Fomalhaut647",
+        "email": "fomalhaut@stu.pku.edu.cn"
+      },
+      "category": "development",
+      "source": "./plugins/pyright-lsp"
+    },
+    {
+      "name": "typescript-lsp",
+      "description": "TypeScript/JavaScript language server for code intelligence. Packaged from Anthropic's claude-plugins-official (Apache-2.0).",
+      "author": {
+        "name": "Fomalhaut647",
+        "email": "fomalhaut@stu.pku.edu.cn"
+      },
+      "category": "development",
+      "source": "./plugins/typescript-lsp"
     }
   ]
 }

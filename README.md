@@ -31,8 +31,10 @@
 | [`agent-team`](plugins/agent-team) | v1.6.0 | 在 Claude Code 桌面端让当前会话当主会话，把工作拆给并行子会话，经一次性 `code-review` 审查会话把关，最后合并成一个 PR |
 | [`kill-guard`](plugins/kill-guard) | v0.1.0 | 挡住按名字或命令行文字找进程再停的命令（`pkill`、`killall`、`xargs kill`、`kill $(pgrep …)`），让 Claude 改成按进程号停 |
 | [`neat-freak`](plugins/neat-freak) | v3.0.1 | 会话结束后把项目文档、CLAUDE.md、Agent 记忆跟代码对齐，并审计规则执行情况；搬运自[数字生命卡兹克的 khazix-skills](https://github.com/KKKKhazix/khazix-skills) |
+| [`pyright-lsp`](plugins/pyright-lsp) | v1.0.0 | Python 语言服务器（Pyright），给 Claude Code 类型诊断和跳转定义；搬运自 [Anthropic 官方 marketplace](https://github.com/anthropics/claude-plugins-official) |
 | [`session-wrap`](plugins/session-wrap) | v0.5.0 | 在 Claude Code 桌面端给会话收尾：整理文档、收齐子会话的改动后提交推送、开 PR 等 CI 后合并、关闭修复的 issue、归档会话 |
 | [`skill-simplifier`](plugins/skill-simplifier) | v0.3.0 | 审查 SKILL.md / CLAUDE.md，删除上游重复和全新会话模型本不会犯的假想防错 |
+| [`typescript-lsp`](plugins/typescript-lsp) | v1.0.0 | TypeScript / JavaScript 语言服务器，给 Claude Code 类型诊断和跳转定义；搬运自 [Anthropic 官方 marketplace](https://github.com/anthropics/claude-plugins-official) |
 
 ## 目录结构
 
@@ -52,8 +54,8 @@
         └── RELEASE-NOTES.md
 ```
 
-每个 plugin 还可选 `.mcp.json` 等附加文件。完整 schema 见 [官方 plugin 文档](https://code.claude.com/docs/en/plugins)。
+每个 plugin 还可选 `.mcp.json`、`.lsp.json` 等附加文件。完整 schema 见 [官方 plugin 文档](https://code.claude.com/docs/en/plugins)。
 
 ## 许可证
 
-[MIT](LICENSE) —— 适用于本 marketplace 及所有自家 plugin。`neat-freak` 是第三方作品，沿用其原作者的 MIT 许可证，见 [plugins/neat-freak/LICENSE](plugins/neat-freak/LICENSE)。
+[MIT](LICENSE) —— 适用于本 marketplace 及所有自家 plugin。`neat-freak` 是第三方作品，沿用其原作者的 MIT 许可证，见 [plugins/neat-freak/LICENSE](plugins/neat-freak/LICENSE)。`pyright-lsp` 和 `typescript-lsp` 搬运自 Anthropic，沿用 Apache-2.0 许可证，见各自目录下的 LICENSE。

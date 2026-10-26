@@ -6,7 +6,7 @@
 
 我个人的 Claude Code plugins marketplace，发布名为 `fomalhaut647-plugins`。`plugins/` 下每个子目录是一个可独立安装的 plugin；`.claude-plugin/marketplace.json` 是对外发布它们的索引。Marketplace 通过 `/plugin marketplace add Fomalhaut647/plugins` 添加，plugin 通过 `/plugin install <name>@fomalhaut647-plugins` 安装。
 
-目前已发布 `agent-team`、`kill-guard`、`neat-freak`、`session-wrap` 与 `skill-simplifier` 五个 plugin。其中 `neat-freak` 是从第三方仓库 khazix-skills（MIT）搬运的，只加了一行本地开关，维护规则见 `plugins/neat-freak/CLAUDE.md`。
+目前已发布 `agent-team`、`kill-guard`、`neat-freak`、`pyright-lsp`、`session-wrap`、`skill-simplifier` 与 `typescript-lsp` 七个 plugin。其中 `neat-freak` 是从第三方仓库 khazix-skills（MIT）搬运的，只加了一行本地开关，维护规则见 `plugins/neat-freak/CLAUDE.md`。`pyright-lsp` 和 `typescript-lsp` 是从 Anthropic 官方 marketplace（Apache-2.0）搬运的 LSP plugin，维护规则见各自目录下的 CLAUDE.md。
 
 ## 直接推送 main
 
@@ -40,7 +40,7 @@
 
 ## 参考克隆 —— 只读，永不 commit
 
-`claude-plugins-official/` 是 Anthropic 官方 marketplace 的本地克隆，已 gitignore，留在这里方便参考 schema 与示例（尤其是 `plugins/example-plugin/` 和 `.claude-plugin/marketplace.json` 的结构）。可随意读；绝不 `git add` 它，也绝不把它的 plugin 整段抄进本仓库。
+`claude-plugins-official/` 是 Anthropic 官方 marketplace 的本地克隆，已 gitignore，留在这里方便参考 schema 与示例（尤其是 `plugins/example-plugin/` 和 `.claude-plugin/marketplace.json` 的结构）。可随意读；绝不 `git add` 它，也不要擅自把它的 plugin 搬进本仓库。例外是 `pyright-lsp` 和 `typescript-lsp`：用户在桌面端装不上官方版本，2026-10-26 要求搬进来，同步上游时以这个克隆为准。
 
 ## 没有 build、没有 tests —— JSON 合法性是唯一校验
 
