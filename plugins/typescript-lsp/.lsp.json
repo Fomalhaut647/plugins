@@ -1,7 +1,9 @@
 {
   "typescript": {
-    "command": "tsc",
+    "command": "python3",
     "args": [
+      "${CLAUDE_PLUGIN_ROOT}/scripts/diagnostics_relay.py",
+      "tsc",
       "--lsp",
       "--stdio"
     ],

@@ -34,7 +34,7 @@ Then browse via `/plugin > Discover` or install a specific plugin:
 | [`pyright-lsp`](plugins/pyright-lsp) | v1.0.0 | Python language server (Pyright) that gives Claude Code type diagnostics and go-to-definition; packaged from [Anthropic's official marketplace](https://github.com/anthropics/claude-plugins-official) |
 | [`session-wrap`](plugins/session-wrap) | v0.5.0 | Wrap up a Claude Code desktop session: tidy docs, collect sub-sessions' changes, commit and push, merge a PR once CI passes, close fixed issues, archive the session |
 | [`skill-simplifier`](plugins/skill-simplifier) | v0.3.0 | Audit a SKILL.md or CLAUDE.md and remove upstream duplication and imagined-error safeguards a fresh-session model would not need |
-| [`typescript-lsp`](plugins/typescript-lsp) | v2.0.0 | Give Claude Code TypeScript / JavaScript type diagnostics and go-to-definition through TypeScript 7's built-in language server; adapted from [Anthropic's official marketplace](https://github.com/anthropics/claude-plugins-official) |
+| [`typescript-lsp`](plugins/typescript-lsp) | v2.1.0 | Give Claude Code TypeScript / JavaScript type diagnostics and go-to-definition through TypeScript 7's built-in language server, with errors pushed automatically after each edit; adapted from [Anthropic's official marketplace](https://github.com/anthropics/claude-plugins-official) |
 
 ## Structure
 

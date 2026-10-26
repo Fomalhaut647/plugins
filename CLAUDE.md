@@ -6,7 +6,7 @@
 
 我个人的 Claude Code plugins marketplace，发布名为 `fomalhaut647-plugins`。`plugins/` 下每个子目录是一个可独立安装的 plugin；`.claude-plugin/marketplace.json` 是对外发布它们的索引。Marketplace 通过 `/plugin marketplace add Fomalhaut647/plugins` 添加，plugin 通过 `/plugin install <name>@fomalhaut647-plugins` 安装。
 
-目前已发布 `agent-team`、`kill-guard`、`neat-freak`、`pyright-lsp`、`session-wrap`、`skill-simplifier` 与 `typescript-lsp` 七个 plugin。其中 `neat-freak` 是从第三方仓库 khazix-skills（MIT）搬运的，只加了一行本地开关，维护规则见 `plugins/neat-freak/CLAUDE.md`。`pyright-lsp` 和 `typescript-lsp` 是从 Anthropic 官方 marketplace（Apache-2.0）搬运的 LSP plugin，其中 `typescript-lsp` 的启动命令改成了 TypeScript 7 自带的语言服务器，维护规则见各自目录下的 CLAUDE.md。
+目前已发布 `agent-team`、`kill-guard`、`neat-freak`、`pyright-lsp`、`session-wrap`、`skill-simplifier` 与 `typescript-lsp` 七个 plugin。其中 `neat-freak` 是从第三方仓库 khazix-skills（MIT）搬运的，只加了一行本地开关，维护规则见 `plugins/neat-freak/CLAUDE.md`。`pyright-lsp` 和 `typescript-lsp` 是从 Anthropic 官方 marketplace（Apache-2.0）搬运的 LSP plugin，其中 `typescript-lsp` 的启动命令改成了 TypeScript 7 自带的语言服务器，并加了一层把诊断转成推送的 Python 转发脚本，维护规则见各自目录下的 CLAUDE.md。
 
 ## 直接推送 main
 
@@ -51,3 +51,5 @@ python3 -c "import json,sys; [json.load(open(p)) for p in sys.argv[1:]]" .claude
 ```
 
 无法 parse 的 `marketplace.json` 会让所有下游用户的 `/plugin marketplace add` 失败 —— 严重程度等同于把 build 搞坏。
+
+例外：`typescript-lsp` 的诊断转发脚本有自己的端到端测试，改它之前看 `plugins/typescript-lsp/CLAUDE.md`。

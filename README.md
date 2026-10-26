@@ -34,7 +34,7 @@
 | [`pyright-lsp`](plugins/pyright-lsp) | v1.0.0 | Python 语言服务器（Pyright），给 Claude Code 类型诊断和跳转定义；搬运自 [Anthropic 官方 marketplace](https://github.com/anthropics/claude-plugins-official) |
 | [`session-wrap`](plugins/session-wrap) | v0.5.0 | 在 Claude Code 桌面端给会话收尾：整理文档、收齐子会话的改动后提交推送、开 PR 等 CI 后合并、关闭修复的 issue、归档会话 |
 | [`skill-simplifier`](plugins/skill-simplifier) | v0.3.0 | 审查 SKILL.md / CLAUDE.md，删除上游重复和全新会话模型本不会犯的假想防错 |
-| [`typescript-lsp`](plugins/typescript-lsp) | v2.0.0 | 用 TypeScript 7 自带的语言服务器给 Claude Code 提供 TypeScript / JavaScript 类型诊断和跳转定义；改编自 [Anthropic 官方 marketplace](https://github.com/anthropics/claude-plugins-official) |
+| [`typescript-lsp`](plugins/typescript-lsp) | v2.1.0 | 用 TypeScript 7 自带的语言服务器给 Claude Code 提供 TypeScript / JavaScript 类型诊断和跳转定义，改完文件自动推送错误；改编自 [Anthropic 官方 marketplace](https://github.com/anthropics/claude-plugins-official) |
 
 ## 目录结构
 

@@ -9,6 +9,7 @@
 改编自 Anthropic 官方 marketplace [claude-plugins-official](https://github.com/anthropics/claude-plugins-official) 中的 `typescript-lsp`（plugin 版本 1.0.0，上游提交 `58267944`），方便在 Claude 桌面端从本 marketplace 安装。和上游的区别：
 
 - 语言服务器从 typescript-language-server 换成 TypeScript 7 自带的 `tsc --lsp --stdio`。TypeScript 7 用 Go 重写后不再带 typescript-language-server 依赖的 tsserver，Homebrew 的 TypeScript 升到 7 之后，上游配置就启动不了了。
+- 加了一层转发（[`scripts/diagnostics_relay.py`](scripts/diagnostics_relay.py)）。TypeScript 7 的语言服务器只在被问到时才给错误，Claude Code 只收主动推送的错误，没有这一层的话改完文件看不到类型错误。转发层在每次打开、改动、保存文件后替 Claude Code 去要错误，再推给它；其他消息原样转发。改一个文件时，其他打开着的文件也会重查，错误有变化才推送。
 - 语言服务器配置从上游的 marketplace 条目挪进本目录的 `.lsp.json`。
 
 从 v2.0.0 起版本号自行维护，不再跟随上游。
@@ -22,6 +23,8 @@ brew install typescript
 ```
 
 也可以用 `npm install -g typescript`。TypeScript 6 及更早版本的 `tsc` 没有 `--lsp` 模式，用不了。
+
+转发层用 `python3` 运行，只用标准库。macOS 装了命令行工具就自带，也可以 `brew install python`。
 
 ## 安装
 
