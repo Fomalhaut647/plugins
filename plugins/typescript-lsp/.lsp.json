@@ -1,7 +1,8 @@
 {
   "typescript": {
-    "command": "typescript-language-server",
+    "command": "tsc",
     "args": [
+      "--lsp",
       "--stdio"
     ],
     "extensionToLanguage": {

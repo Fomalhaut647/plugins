@@ -1,7 +1,7 @@
 {
   "name": "typescript-lsp",
-  "description": "TypeScript/JavaScript language server for code intelligence. Packaged from Anthropic's claude-plugins-official (Apache-2.0).",
-  "version": "1.0.0",
+  "description": "TypeScript/JavaScript code intelligence through TypeScript 7's built-in language server (tsc --lsp). Adapted from Anthropic's claude-plugins-official (Apache-2.0).",
+  "version": "2.0.0",
   "author": {
     "name": "Fomalhaut647",
     "email": "fomalhaut@stu.pku.edu.cn"
