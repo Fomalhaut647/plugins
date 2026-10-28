@@ -28,7 +28,7 @@
 
 | 名字 | 状态 | 说明 |
 | --- | --- | --- |
-| [`agent-team`](plugins/agent-team) | v1.6.0 | 在 Claude Code 桌面端让当前会话当主会话，把工作拆给并行子会话，经一次性 `code-review` 审查会话把关，最后合并成一个 PR |
+| [`agent-team`](plugins/agent-team) | v1.7.0 | 在 Claude Code 桌面端让当前会话当主会话，把工作拆给并行子会话，经一次性 `code-review` 审查会话把关，最后合并成一个 PR |
 | [`kill-guard`](plugins/kill-guard) | v0.1.0 | 挡住按名字或命令行文字找进程再停的命令（`pkill`、`killall`、`xargs kill`、`kill $(pgrep …)`），让 Claude 改成按进程号停 |
 | [`neat-freak`](plugins/neat-freak) | v3.0.1 | 会话结束后把项目文档、CLAUDE.md、Agent 记忆跟代码对齐，并审计规则执行情况；搬运自[数字生命卡兹克的 khazix-skills](https://github.com/KKKKhazix/khazix-skills) |
 | [`pyright-lsp`](plugins/pyright-lsp) | v1.0.0 | Python 语言服务器（Pyright），给 Claude Code 类型诊断和跳转定义；搬运自 [Anthropic 官方 marketplace](https://github.com/anthropics/claude-plugins-official) |

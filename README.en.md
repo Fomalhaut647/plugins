@@ -28,7 +28,7 @@ Then browse via `/plugin > Discover` or install a specific plugin:
 
 | Name | Status | Description |
 | --- | --- | --- |
-| [`agent-team`](plugins/agent-team) | v1.6.0 | Make the current Claude Code desktop session a lead that splits work across parallel sub-sessions, gates each piece with one-shot `code-review` sessions, and merges everything into one PR |
+| [`agent-team`](plugins/agent-team) | v1.7.0 | Make the current Claude Code desktop session a lead that splits work across parallel sub-sessions, gates each piece with one-shot `code-review` sessions, and merges everything into one PR |
 | [`kill-guard`](plugins/kill-guard) | v0.1.0 | Block commands that find processes by name or command-line text and kill them (`pkill`, `killall`, `xargs kill`, `kill $(pgrep …)`), so Claude stops processes by PID instead |
 | [`neat-freak`](plugins/neat-freak) | v3.0.1 | After a session, reconcile project docs, CLAUDE.md, and agent memory with the code, and audit whether rules are followed; packaged from [数字生命卡兹克's khazix-skills](https://github.com/KKKKhazix/khazix-skills) |
 | [`pyright-lsp`](plugins/pyright-lsp) | v1.0.0 | Python language server (Pyright) that gives Claude Code type diagnostics and go-to-definition; packaged from [Anthropic's official marketplace](https://github.com/anthropics/claude-plugins-official) |
