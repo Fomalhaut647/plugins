@@ -76,6 +76,16 @@
       },
       "category": "development",
       "source": "./plugins/typescript-lsp"
+    },
+    {
+      "name": "later",
+      "description": "Queue a message while Claude is working so it arrives as a new user turn after the current turn ends, instead of being slipped in between tool calls.",
+      "author": {
+        "name": "Fomalhaut647",
+        "email": "fomalhaut@stu.pku.edu.cn"
+      },
+      "category": "productivity",
+      "source": "./plugins/later"
     }
   ]
 }

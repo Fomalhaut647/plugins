@@ -1,0 +1,17 @@
+{
+  "name": "later",
+  "description": "Queue a message while Claude is working so it arrives as a new user turn after the current turn ends, instead of being slipped in between tool calls.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Fomalhaut647",
+    "email": "fomalhaut@stu.pku.edu.cn"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/later",
+  "repository": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/later",
+  "keywords": [
+    "later",
+    "queue",
+    "claude-code"
+  ]
+}
