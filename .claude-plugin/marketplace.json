@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "agent-team",
-      "description": "Lead parallel sub-sessions in the Claude Code desktop app — agent-team:lead turns the current session into a lead that agrees an acceptance checklist for each piece before coding, reviews each piece once against it, fixes only blocking issues within a fixed budget, runs one integration review, and merges every branch into one PR; it can also clear the accumulated review backlog.",
+      "description": "Lead parallel sub-sessions in the Claude Code desktop app — agent-team:lead turns the current session into a lead that agrees an acceptance checklist for each piece before coding, reviews each piece once against it, fixes only blocking issues within a fixed budget, runs one integration review, and merges every branch into one PR; it can also clear the accumulated review backlog, and hand development to the local Codex CLI to save Claude usage.",
       "author": {
         "name": "Fomalhaut647",
         "email": "fomalhaut@stu.pku.edu.cn"

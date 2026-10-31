@@ -28,7 +28,7 @@
 
 | 名字 | 状态 | 说明 |
 | --- | --- | --- |
-| [`agent-team`](plugins/agent-team) | v2.0.0 | 在 Claude Code 桌面端让当前会话当主会话，把工作拆给并行子会话：开工前定验收清单，每块审查一次、有预算地修复，最后整合审查并合并成一个 PR |
+| [`agent-team`](plugins/agent-team) | v3.0.0 | 在 Claude Code 桌面端让当前会话当主会话，把工作拆给并行子会话：开工前定验收清单，每块审查一次、有预算地修复，最后整合审查并合并成一个 PR；开发也可以交给本机的 Codex |
 | [`kill-guard`](plugins/kill-guard) | v0.1.0 | 挡住按名字或命令行文字找进程再停的命令（`pkill`、`killall`、`xargs kill`、`kill $(pgrep …)`），让 Claude 改成按进程号停 |
 | [`later`](plugins/later) | v0.1.0 | Claude 干活时排队一条消息，等这一轮整个结束后才作为新的用户消息送到，不在工具调用间隙插进去 |
 | [`neat-freak`](plugins/neat-freak) | v3.0.1 | 会话结束后把项目文档、CLAUDE.md、Agent 记忆跟代码对齐，并审计规则执行情况；搬运自[数字生命卡兹克的 khazix-skills](https://github.com/KKKKhazix/khazix-skills) |

@@ -10,6 +10,7 @@ It builds on the October 2026 parallel-sessions update to the Claude Code deskto
 
 - The Claude Code desktop app (Code tab), where the session has the sub-session tools such as `start_session`, `list_events`, and `SendMessage`. The CLI has no such tools, so the plugin does not work there.
 - A git repository: sub-sessions are isolated in git worktrees.
+- To hand development to Codex: the Codex CLI installed and logged in on this machine; checking Codex's progress needs python3.
 
 ## Installation
 
@@ -44,6 +45,8 @@ Ask for progress any time and the lead answers in one screen: where each piece i
 
 Every so often (say, at each stage boundary), clear the accumulated backlog with "/agent-team:lead 清理审查遗留问题" (clear the review backlog): the lead rechecks each item against the latest code and closes stale ones, groups the rest by root cause, adds automatic checks for recurring classes, and writes the lessons back into the design docs or project rules.
 
+To save Claude usage, add "开发用 Codex" (develop with Codex) to the invocation: each piece is then developed by the Codex CLI on this machine, with the model and reasoning effort from your Codex settings, while reviews and the integration review stay on Claude. Codex runs in a sandbox that can only read, or only write the piece's own worktree, and it never commits or pushes; once it finishes, a background script runs the full test suite and hands failures back to it, waking the lead only when all of that is done. If Codex errors out or runs out of usage, that piece stops and you are notified; the lead never quietly switches to Claude.
+
 ## Design choices
 
 - **A lead-side skill only**: sub-sessions are full desktop sessions, and the platform already tells them how to commit, report, and message. The rules they follow travel in the brief, so they need no skill of their own.
@@ -59,6 +62,9 @@ Every so often (say, at each stage boundary), clear the accumulated backlog with
 - **Local merge + one PR**: sub-sessions never push, which keeps the remote quiet; the pieces come together in the lead's branch and are tested as a whole before review.
 - **Full report by message, one line at the end**: a message from a sub-session wakes the lead right away with the full content, instead of waiting until every sub-session has stopped; its own last reply is a single sentence, so the same report does not take up the lead's context twice.
 - **Automatic archiving**: one-shot review and research sessions pile up and crowd the sidebar; archiving only removes the worktree, and the branch and its commits stay.
+- **Development can go to Codex, reviews stay on Claude**: in past runs, development sessions used about 80% of the Claude usage, the lead and the reviews about 10% each; a different model reviewing also catches the developing model's own blind spots.
+- **Dispatch once, wake once**: Claude usage is driven by the number of model calls, since every call rereads the whole context; so the full test suite and the automatic fix rounds run to completion inside the script before the lead is woken.
+- **Codex stays in a sandbox**: whatever your Codex settings allow, the dispatch script only lets it read, or write the piece's own worktree; the lead commits and pushes.
 
 ## Directory layout
 
@@ -68,7 +74,8 @@ plugins/agent-team/
 │   └── plugin.json         # Plugin metadata
 ├── skills/
 │   └── lead/
-│       └── SKILL.md        # The lead skill
+│       ├── SKILL.md        # The lead skill
+│       └── codex.sh        # Dispatch script for handing development to Codex
 ├── CLAUDE.md               # Contributor guide (AI agents read before changing anything)
 ├── README.md               # Chinese
 ├── README.en.md            # this file
@@ -76,6 +83,10 @@ plugins/agent-team/
 ```
 
 LICENSE lives at the marketplace repo root and applies to this plugin alongside every other plugin.
+
+## Upgrading from 2.x
+
+3.0.0 adds handing development to the local Codex CLI, together with its dispatch script; without "开发用 Codex" (develop with Codex) in the invocation, the lead works as in 2.x. See [RELEASE-NOTES](RELEASE-NOTES.md) for details.
 
 ## Upgrading from 1.x
 
