@@ -14,14 +14,17 @@
 #   --verify <命令>      只用于 code：Codex 完成后，在沙箱外的工作目录里运行这条检查；未通过就把
 #                        失败输出在原会话里交回 Codex 修复，再检查，最多 --fix-rounds 轮
 #   --fix-rounds <n>     检查未通过时自动交回 Codex 的轮数（默认 2；0 表示只检查不返工）
-#   --net                只用于 code：允许 Codex 跑的命令联网（比如装依赖）
-#   --model <模型>、--effort <思考强度>   不给就用用户 Codex 设置里的
+#   --no-net             只用于 code：不让 Codex 跑的命令联网。code 默认允许联网；read 的只读沙箱
+#                        没有联网开关，始终不联网
+#   --model <模型>、--effort <思考强度>
+#   --fast on|off        开或关 Codex 的 Fast 模式（速度更快，用量更多）
+#                        --model、--effort、--fast 不给就用用户 Codex 设置里的
 #
 # 退出码：0 完成（带 --verify 的也通过了检查）；3 自动返工后检查仍未通过；4 Codex 没有提交汇报或
 #   没有给出会话编号；64 用法不对；69 没装 codex；77 codex 没登录；其余是 Codex 自己的退出码。
 set -u
 
-MODE="" CD="" OUT="" RESUME="" VERIFY="" FIX_ROUNDS=2 NET=0 MODEL="" EFFORT=""
+MODE="" CD="" OUT="" RESUME="" VERIFY="" FIX_ROUNDS=2 NET=1 MODEL="" EFFORT="" FAST=""
 
 die() { echo "codex.sh：$2" >&2; exit "$1"; }
 stage() { echo "$1" > "$OUT/stage"; }
@@ -30,8 +33,8 @@ finish() { date +%s > "$OUT/ended"; echo "$1" > "$OUT/exit_code"; rm -f "$OUT/st
 main() {
   while [ $# -gt 0 ]; do
     case "$1" in
-      --net) NET=1; shift ;;
-      --progress|--mode|--cd|--out|--resume|--verify|--fix-rounds|--model|--effort)
+      --no-net) NET=0; shift ;;
+      --progress|--mode|--cd|--out|--resume|--verify|--fix-rounds|--model|--effort|--fast)
         [ $# -ge 2 ] || die 64 "$1 后面要跟一个值"
         case "$1" in
           --progress) progress "$2"; exit $? ;;
@@ -43,6 +46,7 @@ main() {
           --fix-rounds) FIX_ROUNDS="$2" ;;
           --model) MODEL="$2" ;;
           --effort) EFFORT="$2" ;;
+          --fast) FAST="$2" ;;
         esac
         shift 2 ;;
       -*) die 64 "不认识的选项：$1" ;;
@@ -56,8 +60,9 @@ main() {
   [ -n "$CD" ] || die 64 "要用 --cd 给 Codex 的工作目录"
   [ -n "$OUT" ] || die 64 "要用 --out 指定这次任务的运行目录"
   [ -e "$OUT" ] && die 64 "运行目录已经存在：$OUT（每次分派任务用一个新目录）"
-  if [ "$MODE" = read ] && { [ -n "$VERIFY" ] || [ "$NET" = 1 ]; }; then die 64 "--verify、--net 只用于 code"; fi
+  if [ "$MODE" = read ] && { [ -n "$VERIFY" ] || [ "$NET" = 0 ]; }; then die 64 "--verify、--no-net 只用于 code"; fi
   case "$FIX_ROUNDS" in ''|*[!0-9]*) die 64 "--fix-rounds 要写非负整数" ;; esac
+  case "$FAST" in ''|on|off) ;; *) die 64 "--fast 要写 on 或 off" ;; esac
   [ "$(git -C "$CD" rev-parse --is-inside-work-tree 2>/dev/null)" = true ] || die 64 "--cd 不在 git 工作副本里：$CD"
   command -v codex >/dev/null || die 69 "没装 codex 命令行"
   codex login status 2>&1 | grep -q '^Logged in' || die 77 "codex 没登录：请用户自己在终端跑 codex login"
@@ -110,6 +115,11 @@ run_codex() {
   fi
   [ -n "$MODEL" ] && a+=(-c "model=\"$MODEL\"")
   [ -n "$EFFORT" ] && a+=(-c "model_reasoning_effort=\"$EFFORT\"")
+  # Codex 里 Fast 模式就是 priority 档；default 是普通速度
+  case "$FAST" in
+    on) a+=(-c 'service_tier="priority"') ;;
+    off) a+=(-c 'service_tier="default"') ;;
+  esac
   if [ -n "$2" ]; then
     (cd "$CD" && codex exec resume --json -o "$OUT/$4" "${a[@]}" "$2" -) < "$1" > "$OUT/$3" 2>> "$OUT/stderr.log"
   else

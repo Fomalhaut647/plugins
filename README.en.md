@@ -28,7 +28,7 @@ Then browse via `/plugin > Discover` or install a specific plugin:
 
 | Name | Status | Description |
 | --- | --- | --- |
-| [`agent-team`](plugins/agent-team) | v3.0.0 | Make the current Claude Code desktop session a lead that splits work across parallel sub-sessions: an acceptance checklist before coding, one review and a bounded fix budget per piece, then one integration review and a single PR; development can also go to the local Codex CLI |
+| [`agent-team`](plugins/agent-team) | v3.1.0 | Make the current Claude Code desktop session a lead that splits work across parallel sub-sessions: an acceptance checklist before coding, one review and a bounded fix budget per piece, then one integration review and a single PR; development can also go to the local Codex CLI |
 | [`kill-guard`](plugins/kill-guard) | v0.1.0 | Block commands that find processes by name or command-line text and kill them (`pkill`, `killall`, `xargs kill`, `kill $(pgrep …)`), so Claude stops processes by PID instead |
 | [`later`](plugins/later) | v0.1.0 | Queue a message while Claude works so it arrives as a new user turn after the current turn ends, not slipped in between tool calls |
 | [`neat-freak`](plugins/neat-freak) | v3.0.1 | After a session, reconcile project docs, CLAUDE.md, and agent memory with the code, and audit whether rules are followed; packaged from [数字生命卡兹克's khazix-skills](https://github.com/KKKKhazix/khazix-skills) |
