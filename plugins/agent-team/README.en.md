@@ -45,7 +45,7 @@ Ask for progress any time and the lead answers in one screen: where each piece i
 
 Every so often (say, at each stage boundary), clear the accumulated backlog with "/agent-team:lead 清理审查遗留问题" (clear the review backlog): the lead rechecks each item against the latest code and closes stale ones, groups the rest by root cause, adds automatic checks for recurring classes, and writes the lessons back into the design docs or project rules.
 
-To save Claude usage, add "开发用 Codex" (develop with Codex) to the invocation: each piece is then developed by the Codex CLI on this machine, with the model, reasoning effort, and Fast mode from your Codex settings unless the invocation names them, while reviews and the integration review stay on Claude. Codex runs in a sandbox that can only read, or only write the piece's own worktree (with network access while developing and fixing), and it never commits or pushes; once it finishes, a background script runs the full test suite and hands failures back to it, waking the lead only when all of that is done. If Codex errors out or runs out of usage, that piece stops and you are notified; the lead never quietly switches to Claude.
+To save Claude usage, add "开发用 Codex" (develop with Codex) to the invocation: each piece is then developed by the Codex CLI on this machine, with the model, reasoning effort, and Fast mode from your Codex settings unless the invocation names them, while reviews and the integration review stay on Claude. Codex runs in a sandbox that can only read, or only write the piece's own worktree (with network access while developing and fixing), and it never commits or pushes; once it finishes, a background script runs the full test suite and hands failures back to it, waking the lead only when all of that is done. While Codex runs, a heartbeat wakes the lead every 55 minutes and it replies in one line, so its prompt cache does not expire. If Codex errors out or runs out of usage, that piece stops and you are notified; the lead never quietly switches to Claude.
 
 ## Design choices
 
@@ -64,6 +64,7 @@ To save Claude usage, add "开发用 Codex" (develop with Codex) to the invocati
 - **Automatic archiving**: one-shot review and research sessions pile up and crowd the sidebar; archiving only removes the worktree, and the branch and its commits stay.
 - **Development can go to Codex, reviews stay on Claude**: in past runs, development sessions used about 80% of the Claude usage, the lead and the reviews about 10% each; a different model reviewing also catches the developing model's own blind spots.
 - **Dispatch once, wake once**: Claude usage is driven by the number of model calls, since every call rereads the whole context; so the full test suite and the automatic fix rounds run to completion inside the script before the lead is woken.
+- **Heartbeat while Codex runs**: the lead's prompt cache expires after an hour idle, and waking after that rewrites the whole context; a heartbeat every 55 minutes that replies in one line costs far less.
 - **Codex stays in a sandbox**: whatever your Codex settings allow, the dispatch script only lets it read, or write the piece's own worktree; the lead commits and pushes.
 
 ## Directory layout
