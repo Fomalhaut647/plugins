@@ -6,6 +6,10 @@
 # 用法：
 #   codex.sh --mode read|code|review --cd <工作目录> --out <运行目录> [选项] <任务书文件>
 #   codex.sh --progress <运行目录>     查看这次任务进行到哪一步（用户询问进度时用）
+#   codex.sh --stop <运行目录>         让运行中的任务停下（中途改流程时用），立即返回：Codex 正在写代码
+#                                      时，等它这一轮写完、在检查或下一轮返工之前停下；正在检查时，连同
+#                                      检查起的子进程立即停掉。工作副本保持 Codex 写完时的样子，运行目录
+#                                      里的 stop_note 记下停在哪一步，原来那条分派命令以退出码 5 结束
 #
 #   --mode read|code|review
 #                        read 只读；code 只能写 --cd 那个目录；review 用 Codex 自带的审查模式，只读，
@@ -23,23 +27,25 @@
 #                        --model、--effort、--fast 不给就用用户 Codex 设置里的
 #
 # 退出码：0 完成（带 --verify 的也通过了检查）；3 自动返工后检查仍未通过；4 Codex 没有提交汇报或
-#   没有给出会话编号；64 用法不对；69 没装 codex；77 codex 没登录；其余是 Codex 自己的退出码。
+#   没有给出会话编号；5 按 --stop 的要求停下；64 用法不对；69 没装 codex；77 codex 没登录；其余是 Codex 自己的退出码。
 set -u
 
-MODE="" CD="" OUT="" RESUME="" VERIFY="" FIX_ROUNDS=2 NET=1 MODEL="" EFFORT="" FAST=""
+MODE="" CD="" OUT="" RESUME="" VERIFY="" FIX_ROUNDS=2 NET=1 MODEL="" EFFORT="" FAST="" HALT=""
 
 die() { echo "codex.sh：$2" >&2; exit "$1"; }
 stage() { echo "$1" > "$OUT/stage"; }
+stop_requested() { [ -f "$OUT/stop_requested" ]; }
 finish() { date +%s > "$OUT/ended"; echo "$1" > "$OUT/exit_code"; rm -f "$OUT/stage"; exit "$1"; }
 
 main() {
   while [ $# -gt 0 ]; do
     case "$1" in
       --no-net) NET=0; shift ;;
-      --progress|--mode|--cd|--out|--resume|--verify|--fix-rounds|--model|--effort|--fast)
+      --progress|--stop|--mode|--cd|--out|--resume|--verify|--fix-rounds|--model|--effort|--fast)
         [ $# -ge 2 ] || die 64 "$1 后面要跟一个值"
         case "$1" in
           --progress) progress "$2"; exit $? ;;
+          --stop) stop "$2"; exit $? ;;
           --mode) MODE="$2" ;;
           --cd) CD="$2" ;;
           --out) OUT="$2" ;;
@@ -81,12 +87,19 @@ main() {
 
   stage "Codex 工作中"
   run_codex "$OUT/prompt.md" "$RESUME" events.jsonl report.md
-  local rc=$? thread last=report.md vstat="" vround=0
+  local rc=$? thread last=report.md vstat="" vround=0 vrc
   thread=$(cat "$OUT/thread_id" 2>/dev/null)
   if [ -n "$VERIFY" ] && [ "$rc" = 0 ] && [ -n "$thread" ]; then
     while :; do
+      if stop_requested; then
+        HALT="Codex 写完$([ "$vround" -gt 0 ] && echo "第 $vround 轮返工")后、第 $((vround + 1)) 次本机检查之前"
+        break
+      fi
       stage "本机检查中（第 $((vround + 1)) 次）"
-      if (cd "$CD" && bash -c "$VERIFY") > "$OUT/verify-$vround.log" 2>&1; then vstat=pass; break; fi
+      run_verify "$OUT/verify-$vround.log"
+      vrc=$?
+      if stop_requested; then HALT="第 $((vround + 1)) 次本机检查进行中，检查已停掉"; break; fi
+      [ "$vrc" = 0 ] && { vstat=pass; break; }
       [ "$vround" -lt "$FIX_ROUNDS" ] || { vstat=fail; break; }
       vround=$((vround + 1))
       fix_prompt "$OUT/verify-$((vround - 1)).log" > "$OUT/fix-$vround.md"
@@ -100,6 +113,10 @@ main() {
 
   local code=0
   if [ "$rc" != 0 ]; then code=$rc
+  elif stop_requested; then
+    code=5
+    [ -n "$HALT" ] || HALT="Codex 这一轮写完后"
+    echo "按要求停下：$HALT" > "$OUT/stop_note"
   elif [ -z "$thread" ] || [ ! -s "$OUT/$last" ]; then code=4
   elif [ "$vstat" = fail ]; then code=3
   fi
@@ -141,6 +158,31 @@ run_codex() {
   return $r
 }
 
+# run_verify <日志文件>：检查放进单独的进程组，--stop 能连同它起的子进程一起停掉
+run_verify() {
+  local v r
+  set -m
+  (cd "$CD" && exec bash -c "$VERIFY") > "$1" 2>&1 &
+  v=$!
+  set +m
+  echo "$v" > "$OUT/verify_pid"
+  # --stop 先留下停止请求再读 verify_pid，这里先写 verify_pid 再查请求，两边总有一边会停掉检查
+  stop_requested && kill_group "$v" &
+  wait "$v" 2>/dev/null
+  r=$?
+  rm -f "$OUT/verify_pid"
+  return $r
+}
+
+# kill_group <进程组号>：先发 TERM，5 秒内没停干净再发 KILL
+kill_group() {
+  local i=0
+  kill -TERM -- "-$1" 2>/dev/null || return 0
+  while [ "$i" -lt 50 ] && kill -0 -- "-$1" 2>/dev/null; do sleep 0.1; i=$((i + 1)); done
+  kill -KILL -- "-$1" 2>/dev/null
+  return 0
+}
+
 # summary <退出码> <会话编号> <检查结果> <自动返工轮数>
 summary() {
   local secs=$(( $(date +%s) - $(cat "$OUT/started") )) evs=("$OUT/events.jsonl") i=1 n usage
@@ -151,6 +193,7 @@ summary() {
     0) if [ "$3" = pass ]; then echo "结果：完成，本机检查通过（自动返工 $4 轮）"; else echo "结果：完成"; fi ;;
     3) echo "结果：本机检查未通过，自动返工 $4 轮后仍失败" ;;
     4) if [ -n "$2" ]; then echo "结果：Codex 这一轮没有提交汇报"; else echo "结果：没有拿到 Codex 的会话编号，无法续接返工"; fi ;;
+    5) echo "结果：按要求停下，停在：$HALT；工作副本保持 Codex 写完时的样子" ;;
     *) echo "结果：Codex 出错（退出码 $1），出错信息在最后" ;;
   esac
   usage=$(cat "${evs[@]}" 2>/dev/null | grep -o '"usage":{[^}]*}' | tail -1)
@@ -181,7 +224,7 @@ summary() {
     print_report "$OUT/report-fix$i.md" 40
     i=$((i + 1))
   done
-  if [ "$1" != 0 ] && [ "$1" != 3 ] && [ "$1" != 4 ]; then
+  if [ "$1" != 0 ] && [ "$1" != 3 ] && [ "$1" != 4 ] && [ "$1" != 5 ]; then
     echo "--- 出错信息 ---"
     grep -h -E '"type":"(error|turn\.failed)"' "${evs[@]}" 2>/dev/null | tail -3 | cut -c1-400
     tail -n 20 "$OUT/stderr.log"
@@ -270,10 +313,10 @@ progress() {
   started=$(cat "$d/started")
   if [ -f "$d/exit_code" ]; then
     secs=$(( $(cat "$d/ended") - started ))
-    state="已结束，退出码 $(cat "$d/exit_code")，结果见后台任务的输出"
+    state="已结束，退出码 $(cat "$d/exit_code")$([ -f "$d/stop_note" ] && echo "（$(cat "$d/stop_note")）")，结果见后台任务的输出"
   elif kill -0 "$(cat "$d/pid")" 2>/dev/null; then
     secs=$(( now - started ))
-    state="运行中：$(cat "$d/stage" 2>/dev/null)"
+    state="运行中：$(cat "$d/stage" 2>/dev/null)$([ -f "$d/stop_requested" ] && echo "（已请求停止）")"
   else
     secs=$(( $(cat "$d/stopped" 2>/dev/null || echo "$now") - started ))
     state="中途被停止，停在「$(cat "$d/stage" 2>/dev/null)」"
@@ -309,6 +352,22 @@ print(f"最近几步（共 {len(steps)} 步）：")
 for s in steps[-8:]:
     print("  " + s)
 PY
+}
+
+# stop <运行目录>：留下停止请求；正在检查时连同检查起的子进程一起停掉。不等分派命令结束
+stop() {
+  local d="${1%/}" v
+  [ -f "$d/started" ] || die 64 "不是 codex.sh 的运行目录：$d"
+  [ -f "$d/exit_code" ] && die 64 "这次任务已经结束（退出码 $(cat "$d/exit_code")），不用停"
+  kill -0 "$(cat "$d/pid")" 2>/dev/null || die 64 "这次任务已不在运行（中途被停止过），不用停"
+  : > "$d/stop_requested"
+  v=$(cat "$d/verify_pid" 2>/dev/null)
+  if [ -n "$v" ]; then
+    kill_group "$v"
+    echo "已停掉正在运行的本机检查，分派命令马上以退出码 5 结束"
+  else
+    echo "已请求停止：现在「$(cat "$d/stage" 2>/dev/null)」，Codex 这一轮写完后停下，分派命令以退出码 5 结束"
+  fi
 }
 
 main "$@"
