@@ -1,14 +1,16 @@
 #!/bin/bash
-# 主会话把一块的开发交给本机的 Codex 命令行。过程不进主会话的上下文：Codex 的事件写进
+# 主会话把一块的开发或审查交给本机的 Codex 命令行。过程不进主会话的上下文：Codex 的事件写进
 # <运行目录>/events*.jsonl，它每一轮最后的汇报写进 report*.md，屏幕上只打印会话编号、结果、
 # 改动清单、检查结果和汇报。
 #
 # 用法：
-#   codex.sh --mode read|code --cd <工作目录> --out <运行目录> [选项] <任务书文件>
+#   codex.sh --mode read|code|review --cd <工作目录> --out <运行目录> [选项] <任务书文件>
 #   codex.sh --progress <运行目录>     查看这次任务进行到哪一步（用户询问进度时用）
 #
-#   --mode read|code     read 只读；code 只能写 --cd 那个目录。用户的 Codex 设置放开了也照这个关
-#   --cd <目录>          Codex 的工作目录，必须在 git 工作副本里
+#   --mode read|code|review
+#                        read 只读；code 只能写 --cd 那个目录；review 用 Codex 自带的审查模式，只读，
+#                        任务书当作审查要求。用户的 Codex 设置放开了也照这个关
+#   --cd <目录>          Codex 的工作目录，必须在 git 工作副本里；review 时要停在被审的那个提交上
 #   --out <目录>         这次任务的运行目录，必须尚不存在：每次分派任务用一个新目录
 #   --resume <会话编号>  接着之前那个 Codex 会话继续（确认验收清单后开发、修复）
 #   --verify <命令>      只用于 code：Codex 完成后，在沙箱外的工作目录里运行这条检查；未通过就把
@@ -55,12 +57,13 @@ main() {
   done
   [ $# -eq 1 ] || die 64 "最后要给一个任务书文件（用法见脚本开头）"
   local brief="$1"
-  case "$MODE" in read|code) ;; *) die 64 "--mode 要写 read 或 code" ;; esac
+  case "$MODE" in read|code|review) ;; *) die 64 "--mode 要写 read、code 或 review" ;; esac
   [ -f "$brief" ] || die 64 "任务书文件不存在：$brief"
   [ -n "$CD" ] || die 64 "要用 --cd 给 Codex 的工作目录"
   [ -n "$OUT" ] || die 64 "要用 --out 指定这次任务的运行目录"
   [ -e "$OUT" ] && die 64 "运行目录已经存在：$OUT（每次分派任务用一个新目录）"
-  if [ "$MODE" = read ] && { [ -n "$VERIFY" ] || [ "$NET" = 0 ]; }; then die 64 "--verify、--no-net 只用于 code"; fi
+  if [ "$MODE" != code ] && { [ -n "$VERIFY" ] || [ "$NET" = 0 ]; }; then die 64 "--verify、--no-net 只用于 code"; fi
+  if [ "$MODE" = review ] && [ -n "$RESUME" ]; then die 64 "review 每次新开一个 Codex 会话，不能用 --resume"; fi
   case "$FIX_ROUNDS" in ''|*[!0-9]*) die 64 "--fix-rounds 要写非负整数" ;; esac
   case "$FAST" in ''|on|off) ;; *) die 64 "--fast 要写 on 或 off" ;; esac
   [ "$(git -C "$CD" rev-parse --is-inside-work-tree 2>/dev/null)" = true ] || die 64 "--cd 不在 git 工作副本里：$CD"
@@ -113,14 +116,18 @@ run_codex() {
   else
     a+=(-c 'sandbox_mode="read-only"')
   fi
-  [ -n "$MODEL" ] && a+=(-c "model=\"$MODEL\"")
+  # 审查模式优先用 review_model，所以指定模型时两个都设
+  [ -n "$MODEL" ] && a+=(-c "model=\"$MODEL\"" -c "review_model=\"$MODEL\"")
   [ -n "$EFFORT" ] && a+=(-c "model_reasoning_effort=\"$EFFORT\"")
   # Codex 里 Fast 模式就是 priority 档；default 是普通速度
   case "$FAST" in
     on) a+=(-c 'service_tier="priority"') ;;
     off) a+=(-c 'service_tier="default"') ;;
   esac
-  if [ -n "$2" ]; then
+  if [ "$MODE" = review ]; then
+    # 审查范围写在任务书里：--base 不能和自定义的审查要求同时用
+    (cd "$CD" && codex exec review --json -o "$OUT/$4" "${a[@]}" -) < "$1" > "$OUT/$3" 2>> "$OUT/stderr.log"
+  elif [ -n "$2" ]; then
     (cd "$CD" && codex exec resume --json -o "$OUT/$4" "${a[@]}" "$2" -) < "$1" > "$OUT/$3" 2>> "$OUT/stderr.log"
   else
     (cd "$CD" && codex exec --json -o "$OUT/$4" "${a[@]}" -) < "$1" > "$OUT/$3" 2>> "$OUT/stderr.log"
@@ -147,7 +154,13 @@ summary() {
     *) echo "结果：Codex 出错（退出码 $1），出错信息在最后" ;;
   esac
   usage=$(cat "${evs[@]}" 2>/dev/null | grep -o '"usage":{[^}]*}' | tail -1)
-  echo "用时：$((secs / 60)) 分 $((secs % 60)) 秒${usage:+；Codex 用量（这个会话累计）：${usage#\"usage\":}}"
+  usage=${usage#\"usage\":}
+  if [ "$MODE" = review ]; then
+    # 审查跑在 Codex 的审查子会话里，事件记录里的用量全是 0；真实用量在子会话自己的记录里
+    usage=$(review_usage "$2")
+    [ -n "$usage" ] || usage="没找到审查子会话的记录"
+  fi
+  echo "用时：$((secs / 60)) 分 $((secs % 60)) 秒${usage:+；Codex 用量（这个会话累计）：$usage}"
   if [ "$MODE" = code ]; then
     echo "--- 改动清单 ---"
     git -C "$CD" status --short | head -40
@@ -176,6 +189,16 @@ summary() {
   return 0
 }
 
+# review_usage <会话编号>：找到这次审查的子会话记录，打印它累计的用量
+review_usage() {
+  [ -n "$1" ] || return 0
+  local f
+  f=$(find "${CODEX_HOME:-$HOME/.codex}/sessions" -name 'rollout-*.jsonl' -newer "$OUT/started" \
+    -exec grep -l "\"parent_thread_id\":\"$1\"" {} + 2>/dev/null | head -1)
+  [ -n "$f" ] && grep -o '"total_token_usage":{[^}]*}' "$f" | tail -1 | sed 's/^"total_token_usage"://'
+  return 0
+}
+
 # print_report <文件> <最多打印的行数>
 print_report() {
   if [ ! -s "$1" ]; then echo "（没有）"; return 0; fi
@@ -188,6 +211,19 @@ print_report() {
 }
 
 rules() {
+  if [ "$MODE" = review ]; then
+    cat <<'EOF'
+---
+固定规矩（主会话分派审查时追加的，优先于上文）：
+- 汇报用简体中文；代码、命令、报错、文件名照原样。
+- 只读：不改任何文件，不提交、不推送、不切换分支、不动 Issue、不对外发任何消息。
+- 不读、不打印任何密码、Key、令牌、Cookie。
+- 每条发现写清：位置（文件:行号）；具体出错场景（什么输入或操作下、出什么错）；违反了上文验收清单的哪一条或哪条红线，没有就写「无」。
+- 另外逐条核对验收清单，单独列出没有测试、或测试没有真正测到的条目（如断言太松、测的不是这条行为），写清是哪条、为什么。
+- 运行中无法与主会话对话，最后一条消息就是交给主会话的汇报。
+EOF
+    return 0
+  fi
   cat <<'EOF'
 ---
 固定规矩（主会话分派任务时追加的，优先于上文；项目规矩里和这几条冲突的，比如要求认领 Issue、完成后开 PR，这次以这几条为准）：
