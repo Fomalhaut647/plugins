@@ -1,5 +1,5 @@
 #!/bin/bash
-# 调用方（单个 Claude 会话，或 agent-team:lead 的主会话）把开发、调研或审查交给本机的 Codex 命令行。
+# 调用方（agent-team:lead 的主会话）把开发、调研或审查交给本机的 Codex 命令行。
 # 过程不进调用方的上下文：Codex 的事件写进 <运行目录>/events*.jsonl，它每一轮最后的汇报写进
 # report*.md，屏幕上只打印会话编号、结果、改动清单、检查结果和汇报。
 #

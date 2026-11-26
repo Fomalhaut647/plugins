@@ -1,5 +1,12 @@
 # agent-team Release Notes
 
+## v5.0.0
+
+- 删除 skill `agent-team:codex`。在单个会话里把审查、调研或写代码交给 Codex 的能力，移到了新的 `model-trio` plugin（`model-trio:codex`），需要的话另外安装。
+- 任务分派脚本 `codex.sh` 移回 `skills/lead/`，只供 `agent-team:lead` 使用。`agent-team:lead` 的用法和行为不变。
+
+为什么：用户的决定。`model-trio` 用一个 MCP 服务器调用 Codex 和 Antigravity，自带只在用户提到 Codex 时启用的 skill；两个 plugin 都留着 Codex skill，用户一提 Codex 就会同时符合两个 skill 的触发条件。
+
 ## v4.2.0
 
 - 新增 skill `agent-team:codex`：在任何会话里把审查、只读调研或写代码交给本机的 Codex 命令行，不必开团队，比如让 Claude 用 Codex 审查自己刚写的改动。用户的话里明确提到 Codex 时自动启用，也可以手动调用。审查自己的改动时，Claude 逐条复核 Codex 的发现，成立的报告给用户；只审一轮。

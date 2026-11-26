@@ -4,13 +4,13 @@
 
 A Claude Code plugin that makes the current desktop session a lead: it splits a larger piece of work across several parallel sub-sessions. The lead splits, dispatches, agrees acceptance checklists, verifies, triages reviews, and merges; the sub-sessions write the code, and reviews go to the local Codex CLI by default.
 
-It also ships a skill that works on its own, `agent-team:codex`: in any session, hand a review, some research, or coding to the local Codex, for example to have Claude get its own fresh changes reviewed by Codex (see "Using Codex on its own").
+To use Codex from a single session (for example to have Claude get its own fresh changes reviewed by Codex), use the [`model-trio`](../model-trio) plugin.
 
 The lead builds on the October 2026 parallel-sessions update to the Claude Code desktop app: a session can start sub-sessions directly, each with its own worktree and branch, nested under the lead and reporting back when they finish. It does **not** use the experimental agent teams feature, which is only available in the CLI.
 
 ## Requirements
 
-- The Claude Code desktop app (Code tab), where the session has the sub-session tools such as `start_session`, `list_events`, and `SendMessage`. The CLI has no such tools, so `agent-team:lead` does not work there; `agent-team:codex` does not need them and works in the CLI too.
+- The Claude Code desktop app (Code tab), where the session has the sub-session tools such as `start_session`, `list_events`, and `SendMessage`. The CLI has no such tools, so `agent-team:lead` does not work there.
 - A git repository: sub-sessions are isolated in git worktrees, and Codex only runs inside a git working copy.
 - The Codex CLI installed and logged in on this machine: it does the reviews by default (not needed when Claude reviews instead); checking Codex's progress needs python3.
 
@@ -53,16 +53,6 @@ To save more Claude usage, add "开发用 Codex" (develop with Codex) to the inv
 
 If Codex errors out or runs out of usage, that piece stops and you are notified; the lead never quietly switches to Claude.
 
-## Using Codex on its own
-
-You can use Codex without a team. In any session, say something that mentions Codex, such as "用 Codex 审一下刚才的改动" (have Codex review the changes just made), or invoke `/agent-team:codex` by hand, and Claude hands that job to the local Codex; it never turns this on by itself when you have not mentioned Codex. There are three uses:
-
-- **Review**: Codex reviews read-only in its own built-in review mode, for example the session's uncommitted changes. Claude then checks each finding against the code, drops the ones that do not hold and says why, and reports the ones that do. There is one review round, with no automatic re-review after fixes.
-- **Read-only research**: Codex looks into a question or gives a second opinion without changing any file.
-- **Coding**: Codex can only write the current working copy, and it never commits or pushes.
-
-The sandbox limits, the default model and reasoning effort, running in the background, checking progress, and stopping midway all work as they do when the lead hands work to Codex, since both use the same dispatch script.
-
 ## Design choices
 
 - **A lead-side skill only**: sub-sessions are full desktop sessions, and the platform already tells them how to commit, report, and message. The rules they follow travel in the brief, so they need no skill of their own.
@@ -86,7 +76,6 @@ The sandbox limits, the default model and reasoning effort, running in the backg
 - **Dispatch once, wake once**: Claude usage is driven by the number of model calls, since every call rereads the whole context; so the checks and the automatic fix rounds run to completion inside the script before the lead is woken.
 - **Heartbeat while Codex develops**: the lead's prompt cache expires after an hour idle, and waking after that rewrites the whole context; Codex development sometimes runs past an hour, and a heartbeat every 55 minutes that replies in one line costs far less. Reviews are quick, so they get no heartbeat.
 - **Codex stays in a sandbox**: whatever your Codex settings allow, the dispatch script only lets it read, or write the piece's own worktree; the lead commits and pushes.
-- **Calling Codex is a skill of its own**: the lead and a single session share one dispatch script; used on its own, the skill only says how to call it and leaves the rest to Claude's judgment.
 
 ## Directory layout
 
@@ -95,11 +84,9 @@ plugins/agent-team/
 ├── .claude-plugin/
 │   └── plugin.json         # Plugin metadata
 ├── skills/
-│   ├── lead/
-│   │   └── SKILL.md        # The lead skill
-│   └── codex/
-│       ├── SKILL.md        # The skill for using Codex on its own
-│       └── codex.sh        # Dispatch script for handing work to Codex, shared by both skills
+│   └── lead/
+│       ├── SKILL.md        # The lead skill
+│       └── codex.sh        # Dispatch script for handing work to Codex
 ├── CLAUDE.md               # Contributor guide (AI agents read before changing anything)
 ├── README.md               # Chinese
 ├── README.en.md            # this file
@@ -107,6 +94,10 @@ plugins/agent-team/
 ```
 
 LICENSE lives at the marketplace repo root and applies to this plugin alongside every other plugin.
+
+## Upgrading from 4.x
+
+5.0.0 removes `agent-team:codex`: using Codex from a single session moved to the [`model-trio`](../model-trio) plugin, which you install separately if you need it. `agent-team:lead` works as before. See [RELEASE-NOTES](RELEASE-NOTES.md) for details.
 
 ## Upgrading from 3.x
 

@@ -1,0 +1,21 @@
+{
+  "name": "model-trio",
+  "description": "Let Claude Code hand work to the local Codex and Antigravity (Gemini) CLIs through a small MCP server: Codex writes self-contained modules, reviews code, or researches read-only inside a sandbox; Antigravity drafts an independent plan or advises on UI copy and interaction, strictly read-only. Each skill activates only when the user explicitly mentions Codex or Antigravity.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Fomalhaut647",
+    "email": "fomalhaut@stu.pku.edu.cn"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/model-trio",
+  "repository": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/model-trio",
+  "keywords": [
+    "codex",
+    "antigravity",
+    "gemini",
+    "mcp",
+    "multi-model",
+    "code-review",
+    "claude-code"
+  ]
+}

@@ -4,7 +4,7 @@
 
 动手前先读这一节。
 
-agent-team 有两个 skill：`skills/lead/SKILL.md` 是主体，`skills/codex/SKILL.md` 是从它拆出来的、调用本机 Codex 的能力（见设计要点最后一条）。lead 的价值来自几条设计取舍，每条都对应真实协调 session 里观察到的问题。不理解某句话为什么存在就去「整理」或「补全」，通常会在下一次真实协调 session 里让行为退化，而不是在你的本地检查里暴露。
+agent-team 只有一个 skill：`skills/lead/SKILL.md`，同目录的 `codex.sh` 是它交给 Codex 时用的任务分派脚本。lead 的价值来自几条设计取舍，每条都对应真实协调 session 里观察到的问题。不理解某句话为什么存在就去「整理」或「补全」，通常会在下一次真实协调 session 里让行为退化，而不是在你的本地检查里暴露。
 
 改动前你必须：
 
@@ -46,6 +46,7 @@ agent-team 有两个 skill：`skills/lead/SKILL.md` 是主体，`skills/codex/SK
 - **子会话之间不直接通信**，统一经主会话中转：只有主会话掌握全局。
 - **保持精简**。新增规则要有真实 session 里观察到的失败作为依据；能交给模型现场判断的边界情况不写。
 - **调用 Codex 的能力拆成单独的 skill**（v4.2.0，用户的决定）。用户想在 lead 之外也用 Codex，比如单会话里让 Claude 用 Codex 审查自己刚写的改动。`codex.sh` 移到 `skills/codex/`，`agent-team:codex` 只写怎么调用它；lead 仍自带协调时用 Codex 的全部规矩，只是改用 `${CLAUDE_PLUGIN_ROOT}` 引用这份脚本，行为不变。几处取舍都是用户定的：放在本 plugin 里而不是独立 plugin，两个 skill 才能可靠地共用一份脚本；允许模型自动启用，但只在用户的话里明确提到 Codex 时；审查自己的改动时，Claude 复核后报告成立的问题，不规定修复前要等用户批准，只审一轮（沿用「审查不当终点」）；正文尽量简单，不过多约束 Claude，所以不要往里加流程。脚本追加给 Codex 的固定规矩里，「主会话」改称「调用方」，核对验收清单改成任务书给了清单才做。
+- **单会话里用 Codex 的 skill 移到 `model-trio` plugin**（v5.0.0，用户的决定，取代上一条）。用户照一篇讲 Claude、GPT、Gemini 三家协同的文章，新建了 `model-trio`：用一个 MCP 服务器调用 Codex 和 Antigravity，各带一个只在用户提到时启用的 skill。两个 plugin 都留着 Codex skill 的话，用户一提 Codex 就同时符合两个 skill 的触发条件，所以删掉 `agent-team:codex`。`codex.sh` 移回 `skills/lead/`，lead 用 `${CLAUDE_SKILL_DIR}` 引用它，协调流程和脚本行为不变；脚本里上一条改过的通用措辞保留。lead 不改用 `model-trio` 的 MCP 工具：它依赖脚本里的本机检查、自动返工、查进度和停止，那个 MCP 服务器刻意没有这些。
 
 ## Pull Request 要求
 

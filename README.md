@@ -28,9 +28,10 @@
 
 | 名字 | 状态 | 说明 |
 | --- | --- | --- |
-| [`agent-team`](plugins/agent-team) | v4.2.0 | 在 Claude Code 桌面端让当前会话当主会话，把工作拆给并行子会话：开工前定验收清单，每块审查一次（默认交给本机的 Codex）、有预算地修复，最后整合审查并合并成一个 PR；开发也可以改交给 Codex。另带 `agent-team:codex`，在任何会话里单独把审查、调研或写代码交给 Codex |
+| [`agent-team`](plugins/agent-team) | v5.0.0 | 在 Claude Code 桌面端让当前会话当主会话，把工作拆给并行子会话：开工前定验收清单，每块审查一次（默认交给本机的 Codex）、有预算地修复，最后整合审查并合并成一个 PR；开发也可以改交给 Codex |
 | [`kill-guard`](plugins/kill-guard) | v0.1.0 | 挡住按名字或命令行文字找进程再停的命令（`pkill`、`killall`、`xargs kill`、`kill $(pgrep …)`），让 Claude 改成按进程号停 |
 | [`later`](plugins/later) | v0.1.0 | Claude 干活时排队一条消息，等这一轮整个结束后才作为新的用户消息送到，不在工具调用间隙插进去 |
+| [`model-trio`](plugins/model-trio) | v0.1.0 | 让 Claude 通过一个本地 MCP 服务器把活交给本机的 Codex 和 Antigravity（Gemini）命令行：Codex 在沙箱里写成块的模块、审查代码或做只读调研，Antigravity 只读，独立出方案或给界面文案和交互提意见；两个 skill 只在你明确提到 Codex 或 Antigravity 时启用 |
 | [`neat-freak`](plugins/neat-freak) | v3.0.1 | 会话结束后把项目文档、CLAUDE.md、Agent 记忆跟代码对齐，并审计规则执行情况；搬运自[数字生命卡兹克的 khazix-skills](https://github.com/KKKKhazix/khazix-skills) |
 | [`pyright-lsp`](plugins/pyright-lsp) | v1.0.0 | Python 语言服务器（Pyright），给 Claude Code 类型诊断和跳转定义；搬运自 [Anthropic 官方 marketplace](https://github.com/anthropics/claude-plugins-official) |
 | [`session-wrap`](plugins/session-wrap) | v0.5.0 | 在 Claude Code 桌面端给会话收尾：整理文档、收齐子会话的改动后提交推送、开 PR 等 CI 后合并、关闭修复的 issue、归档会话 |

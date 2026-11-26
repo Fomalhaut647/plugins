@@ -9,13 +9,23 @@
   "plugins": [
     {
       "name": "agent-team",
-      "description": "Lead parallel sub-sessions in the Claude Code desktop app — agent-team:lead turns the current session into a lead that agrees an acceptance checklist for each piece before coding, reviews each piece once against it, fixes only blocking issues within a fixed budget, runs one integration review, and merges every branch into one PR; it can also clear the accumulated review backlog. By default Claude sub-sessions develop and the local Codex CLI reviews; development can go to Codex instead, with Claude reviewing, to save Claude usage. Also ships agent-team:codex, which hands a review, read-only research, or coding to the local Codex CLI from any single session.",
+      "description": "Lead parallel sub-sessions in the Claude Code desktop app — agent-team:lead turns the current session into a lead that agrees an acceptance checklist for each piece before coding, reviews each piece once against it, fixes only blocking issues within a fixed budget, runs one integration review, and merges every branch into one PR; it can also clear the accumulated review backlog. By default Claude sub-sessions develop and the local Codex CLI reviews; development can go to Codex instead, with Claude reviewing, to save Claude usage.",
       "author": {
         "name": "Fomalhaut647",
         "email": "fomalhaut@stu.pku.edu.cn"
       },
       "category": "productivity",
       "source": "./plugins/agent-team"
+    },
+    {
+      "name": "model-trio",
+      "description": "Let Claude Code hand work to the local Codex and Antigravity (Gemini) CLIs through a small MCP server: Codex writes self-contained modules, reviews code, or researches read-only inside a sandbox; Antigravity drafts an independent plan or advises on UI copy and interaction, strictly read-only. Each skill activates only when the user explicitly mentions Codex or Antigravity.",
+      "author": {
+        "name": "Fomalhaut647",
+        "email": "fomalhaut@stu.pku.edu.cn"
+      },
+      "category": "productivity",
+      "source": "./plugins/model-trio"
     },
     {
       "name": "skill-simplifier",
