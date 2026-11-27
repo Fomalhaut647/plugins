@@ -96,6 +96,16 @@
       },
       "category": "productivity",
       "source": "./plugins/later"
+    },
+    {
+      "name": "aiic",
+      "description": "Three analysis skills distilled from course material: deep-thinking works a question through four passes (gut answer, breadth and depth, comparison across places and time, abstraction) to reach root causes and transferable patterns; demand-analysis breaks a product idea into user × scenario × motivation and judges key factors, barriers, Why NOW and Why ME; market-sizing estimates annual market size as breadth × intensity × frequency, with a bundled calculator.",
+      "author": {
+        "name": "Fomalhaut647",
+        "email": "fomalhaut@stu.pku.edu.cn"
+      },
+      "category": "productivity",
+      "source": "./plugins/aiic"
     }
   ]
 }

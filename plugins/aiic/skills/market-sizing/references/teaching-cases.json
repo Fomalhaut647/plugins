@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "douyin-classroom",
+      "label": "抖音信息流广告：课堂假设",
+      "scope": {
+        "geography": "国内（课程口径）",
+        "period": "一年；课程教学情景，非当期实测",
+        "currency": "CNY",
+        "level": "brand",
+        "metric": "国内抖音信息流广告投放金额",
+        "population_unit": "人",
+        "annual_user_definition": "当年使用过抖音的去重用户",
+        "event_unit": "次会话",
+        "exclusions": "不含其他品牌、非信息流广告、其他收入"
+      },
+      "population": {
+        "label": "总人口",
+        "value": "1400000000",
+        "unit": "人",
+        "evidence": "course_given",
+        "source": "课件 PDF 第63页，人口约数"
+      },
+      "penetration": [
+        {
+          "label": "年度品牌使用渗透率",
+          "value": "0.70",
+          "unit": "无量纲",
+          "evidence": "course_assumption",
+          "source": "课件 PDF 第63页，待验证"
+        }
+      ],
+      "intensity": [
+        {
+          "label": "每会话时长",
+          "value": "15",
+          "unit": "分钟/次会话",
+          "evidence": "course_assumption",
+          "source": "课件 PDF 第63页"
+        },
+        {
+          "label": "每分钟计费广告曝光",
+          "value": "0.25",
+          "unit": "次计费曝光/分钟",
+          "evidence": "course_assumption",
+          "source": "课件 PDF 第63页"
+        },
+        {
+          "label": "CPM",
+          "value": "25",
+          "unit": "CNY/千次计费曝光",
+          "evidence": "course_assumption",
+          "source": "课件 PDF 第63页"
+        },
+        {
+          "label": "千次到单次换算",
+          "value": "0.001",
+          "unit": "千次计费曝光/次计费曝光",
+          "evidence": "derived",
+          "source": "CPM 的单位换算"
+        }
+      ],
+      "frequency": [
+        {
+          "label": "年度活跃天数",
+          "value": "250",
+          "unit": "活跃日/人/年",
+          "evidence": "course_assumption",
+          "source": "课件 PDF 第63页"
+        },
+        {
+          "label": "活跃日打开次数",
+          "value": "4",
+          "unit": "次会话/活跃日",
+          "evidence": "course_assumption",
+          "source": "课件 PDF 第63页"
+        }
+      ],
+      "reported": {
+        "value": "91900000000",
+        "absolute_tolerance": "50000000",
+        "source": "课件 PDF 第63页，约919亿元，按最接近的1亿元展示"
+      }
+    },
+    {
+      "id": "haidilao-classroom",
+      "label": "海底捞堂食：课堂假设",
+      "scope": {
+        "geography": "国内（课程口径）",
+        "period": "一年；课程教学情景，非当期实测",
+        "currency": "CNY",
+        "level": "brand",
+        "metric": "国内海底捞堂食消费金额",
+        "population_unit": "人",
+        "annual_user_definition": "当年至少在海底捞堂食一次的去重消费者",
+        "event_unit": "人次就餐",
+        "exclusions": "不含其他品牌、其他餐饮赛道与非堂食业务"
+      },
+      "population": {
+        "label": "总人口",
+        "value": "1400000000",
+        "unit": "人",
+        "evidence": "course_given",
+        "source": "课件 PDF 第64页，人口约数"
+      },
+      "penetration": [
+        {
+          "label": "年度品牌消费渗透率",
+          "value": "0.05",
+          "unit": "无量纲",
+          "evidence": "course_assumption",
+          "source": "课件 PDF 第64页，待验证"
+        }
+      ],
+      "intensity": [
+        {
+          "label": "每人每次实付",
+          "value": "100",
+          "unit": "CNY/人次就餐",
+          "evidence": "course_assumption",
+          "source": "课件 PDF 第64页，待验证"
+        }
+      ],
+      "frequency": [
+        {
+          "label": "年度人均堂食次数",
+          "value": "4",
+          "unit": "人次就餐/人/年",
+          "evidence": "course_assumption",
+          "source": "课件 PDF 第64页，待验证"
+        }
+      ],
+      "reported": {
+        "value": "28000000000",
+        "source": "课件 PDF 第64页，280亿元/年"
+      }
+    },
+    {
+      "id": "ai-interview-base",
+      "label": "应届生纯 AI 面试前陪练：课堂基础情景",
+      "scope": {
+        "geography": "国内（课程口径）",
+        "period": "一年；课程教学情景，非当期实测",
+        "currency": "CNY",
+        "level": "category",
+        "metric": "国内应届生面试前纯AI陪练实付金额",
+        "population_unit": "人",
+        "annual_user_definition": "当年购买过纯AI面试前陪练的去重应届生",
+        "event_unit": "次付费练习",
+        "exclusions": "不含企业筛选、人工培训、社招与面试中辅助"
+      },
+      "population": {
+        "label": "国内应届毕业生潜在人群",
+        "value": "12700000",
+        "unit": "人",
+        "evidence": "course_given",
+        "source": "课件 PDF 第65页：2026届预计值，未独立核验"
+      },
+      "penetration": [
+        {
+          "label": "潜在人群中的年度付费比例",
+          "value": "0.01",
+          "unit": "无量纲",
+          "evidence": "course_assumption",
+          "source": "课件 PDF 第66、68页；按统一口径从强度栏移入广度"
+        }
+      ],
+      "intensity": [
+        {
+          "label": "单次实付",
+          "value": "20",
+          "unit": "CNY/次付费练习",
+          "evidence": "course_assumption",
+          "source": "课件 PDF 第66、68页，教学假设"
+        }
+      ],
+      "frequency": [
+        {
+          "label": "每付费者年购买次数",
+          "value": "3",
+          "unit": "次付费练习/人/年",
+          "evidence": "course_assumption",
+          "source": "课件 PDF 第67、68页，教学假设"
+        }
+      ],
+      "reported": {
+        "value": "7620000",
+        "source": "课件 PDF 第68页，762万元/年"
+      }
+    }
+  ]
+}

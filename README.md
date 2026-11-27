@@ -29,6 +29,7 @@
 | 名字 | 状态 | 说明 |
 | --- | --- | --- |
 | [`agent-team`](plugins/agent-team) | v5.0.0 | 在 Claude Code 桌面端让当前会话当主会话，把工作拆给并行子会话：开工前定验收清单，每块审查一次（默认交给本机的 Codex）、有预算地修复，最后整合审查并合并成一个 PR；开发也可以改交给 Codex |
+| [`aiic`](plugins/aiic) | v0.1.0 | 三个提炼自课程课件的分析类 skill：`deep-thinking` 用「四次思考」把一个问题想透，`demand-analysis` 按「用户 × 场景 × 动机」分析产品需求，`market-sizing` 按「广度 × 强度 × 频度」测算市场规模 |
 | [`kill-guard`](plugins/kill-guard) | v0.1.0 | 挡住按名字或命令行文字找进程再停的命令（`pkill`、`killall`、`xargs kill`、`kill $(pgrep …)`），让 Claude 改成按进程号停 |
 | [`later`](plugins/later) | v0.1.0 | Claude 干活时排队一条消息，等这一轮整个结束后才作为新的用户消息送到，不在工具调用间隙插进去 |
 | [`model-trio`](plugins/model-trio) | v0.1.0 | 让 Claude 通过一个本地 MCP 服务器把活交给本机的 Codex 和 Antigravity（Gemini）命令行：Codex 在沙箱里写成块的模块、审查代码或做只读调研，Antigravity 只读，独立出方案或给界面文案和交互提意见；两个 skill 只在你明确提到 Codex 或 Antigravity 时启用 |

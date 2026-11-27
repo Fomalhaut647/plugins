@@ -1,0 +1,19 @@
+{
+  "name": "aiic",
+  "description": "Three analysis skills distilled from course material: deep-thinking works a question through four passes (gut answer, breadth and depth, comparison across places and time, abstraction) to reach root causes and transferable patterns; demand-analysis breaks a product idea into user × scenario × motivation and judges key factors, barriers, Why NOW and Why ME; market-sizing estimates annual market size as breadth × intensity × frequency, with a bundled calculator.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Fomalhaut647",
+    "email": "fomalhaut@stu.pku.edu.cn"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/aiic",
+  "repository": "https://github.com/Fomalhaut647/plugins/tree/main/plugins/aiic",
+  "keywords": [
+    "aiic",
+    "deep-thinking",
+    "demand-analysis",
+    "market-sizing",
+    "claude-code"
+  ]
+}
